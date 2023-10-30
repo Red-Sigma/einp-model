@@ -4,7 +4,7 @@
     "startPoint": "2022-09-12T00:00:00",
     "endPoint": "2022-09-12T11:59:59",
     "deltaTUnit": "seconds",
-    "console": false,
+    "console": true,
     "output": "csv",
     "options": {
       "delimiter": ";",
@@ -14,7 +14,7 @@
   "layers": [
     {
       "name": "Perimeter",
-      "file": "Resources/addo.asc"
+      "file": "Resources/einp_perimeter.geojson"
     },
     {
       "name":"WaterLayer",
