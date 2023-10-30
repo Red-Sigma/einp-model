@@ -12,8 +12,7 @@ using NetTopologySuite.Geometries;
 
 namespace GeoRasterBlueprint.Model;
 
-public class LandscapeLayer : AbstractLayer
-{
+public class LandscapeLayer : AbstractLayer {
     /// <summary>
     /// The LandscapeLayer registers the Elephants in the runtime system. In this way, the tick methods
     /// of the agents can be executed later. Then the expansion of the simulation area is calculated using
@@ -24,8 +23,7 @@ public class LandscapeLayer : AbstractLayer
     /// <param name="unregisterAgentHandle"></param>
     /// <returns>true if the agents where registered</returns>
     public override bool InitLayer(LayerInitData layerInitData, RegisterAgent registerAgentHandle,
-        UnregisterAgent unregisterAgentHandle)
-    {
+        UnregisterAgent unregisterAgentHandle) {
         base.InitLayer(layerInitData, registerAgentHandle, unregisterAgentHandle);
 
         // Calculate and expand extent
