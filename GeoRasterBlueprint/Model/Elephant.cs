@@ -44,7 +44,7 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
     /// <summary>
     ///     The distance in meters the elephant should move per tick
     /// </summary>
-    private const double Distance = 10.0;
+    private const double Distance = 10.0
 
     /// <summary>
     ///     The current position of the agent
