@@ -101,6 +101,9 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
 
     public void Tick() {
         Energy -= 1;
+        
+        
+        
 
         // Create target position with current bearing and distance
         Target = Position.CalculateRelativePosition(_bearing, Distance);
@@ -111,7 +114,12 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
             if (waterSources.Any()) {
                 // Get coordinates of the nearest water source...
                 var nearestWaterSource = waterSources.First();
-                var waterSourceLocation = (Point)nearestWaterSource.VectorStructured.Geometry;
+                
+                //for multipolygon
+                var waterSourceLocation = (Point)nearestWaterSource.VectorStructured.Geometry.Centroid;
+                //for points
+                //var waterSourceLocation = (Point)nearestWaterSource.VectorStructured.Geometry;
+                
                 Target = new Position(waterSourceLocation.X, waterSourceLocation.Y);
 
                 // ... and change the agent's bearing such that it looks in the direction of the water source
