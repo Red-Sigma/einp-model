@@ -70,8 +70,8 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
     /// <summary>
     ///     The perimeter of the simulation environment
     /// </summary>
-    [PropertyDescription(Name = "Perimeter")]
-    public Perimeter Perimeter { get; set; }
+    [PropertyDescription(Name = "PerimeterLayer")]
+    public PerimeterLayer PerimeterLayer { get; set; }
 
     /// <summary>
     ///     The unique identifier of the agent
@@ -87,7 +87,7 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
         Layer = layer;
 
         // Make sure elephants' initial position is inside the perimeter
-        if (!Perimeter.IsPointInside(new Position(Longitude, Latitude))) {
+        if (!PerimeterLayer.IsPointInside(new Position(Longitude, Latitude))) {
             throw new Exception("Start point is not inside perimeter.");
         }
 
@@ -135,7 +135,7 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
         }
 
         // Make sure the calculated target is still inside our perimeter
-        if (Perimeter.IsPointInside(Target)) {
+        if (PerimeterLayer.IsPointInside(Target)) {
             // Target is inside perimeter, so move there
             Position = Layer.Environment.MoveTowards(this, _bearing, Distance);
         }

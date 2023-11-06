@@ -6,7 +6,7 @@ namespace GeoRasterBlueprint.Model;
 /// <summary>
 ///     A vector layer that ingests a .geojson vector file with the walkable area by the agents.
 /// </summary>
-public class Perimeter : VectorLayer {
+public class PerimeterLayer : VectorLayer {
     /// <summary>
     ///     Checks for the coordinate whether this point is inside the perimeter (the defined polygon).
     /// </summary>

@@ -43,8 +43,8 @@ public class LandscapeLayer : AbstractLayer {
 
     public List<Elephant> Elephants { get; set; }
 
-    [PropertyDescription(Name = "Perimeter")]
-    public Perimeter Fence { get; set; }
+    [PropertyDescription(Name = "PerimeterLayer")]
+    public PerimeterLayer Fence { get; set; }
 
     public GeoHashEnvironment<Elephant> Environment { get; set; }
 

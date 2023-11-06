@@ -17,7 +17,7 @@ internal static class Program
         // Create a new model description that holds all parts of the model (agents, entities, layers)
         var description = new ModelDescription();
         description.AddLayer<LandscapeLayer>();
-        description.AddLayer<Perimeter>();
+        description.AddLayer<PerimeterLayer>();
         description.AddLayer<WaterLayer>();
 
         description.AddAgent<Elephant, LandscapeLayer>();
