@@ -1,6 +1,6 @@
 {
   "globals": {
-    "deltaT": 1,
+    "deltaT": 10,
     "startPoint": "2022-09-12T00:00:00",
     "endPoint": "2022-09-12T11:59:59",
     "deltaTUnit": "seconds",
@@ -19,6 +19,10 @@
     {
       "name":"WaterLayer",
       "file":"Resources/WaterSpots.geojson"
+    },
+    {
+      "name": "VegetationLayer",
+      "file": "Resources/ndvi_december_2022_bounded.asc"
     }
   ],
   "agents": [
