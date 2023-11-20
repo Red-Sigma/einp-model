@@ -50,7 +50,7 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
     ///     The current position of the agent
     /// </summary>
     public Position Position { get; set; }
-
+    
     /// <summary>
     ///     The current target of the agent
     /// </summary>
@@ -77,6 +77,23 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
     ///     The unique identifier of the agent
     /// </summary>
     public Guid ID { get; set; }
+
+    /// <summary>
+    ///     The layer through which the agent can find food
+    /// </summary>
+    [PropertyDescription(Name = "VegetationLayer")]
+    public VegetationLayer VegetationLayer { get; set; }
+    
+    
+
+    #endregion
+    
+    #region constants
+
+    /// <summary>
+    ///     The frequency in which the animal looks for food
+    /// </summary>
+    private int tickSearchForFood = 10;
 
     #endregion
 
@@ -105,7 +122,31 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
         // Create target position with current bearing and distance
         Target = Position.CalculateRelativePosition(_bearing, Distance);
 
-        if (Energy < 40) {
+        if (Layer.GetCurrentTick() % tickSearchForFood == 0) {
+            if (VegetationLayer.IsPointInside(Position)) {
+                var all = VegetationLayer.Explore(Position, double.MaxValue, 4);
+                var res = all.OrderBy(a => a.Node.Value).Last();
+                if (res.Node?.NodePosition != null) {
+                    
+                    var targetX = res.Node.NodePosition.X;
+                    var targetY = res.Node.NodePosition.Y;
+                    
+                    var targetLon = VegetationLayer.LowerLeft.X +
+                                    targetX * VegetationLayer.CellWidth;
+                    var targetLat = VegetationLayer.LowerLeft.Y +
+                                    targetY * VegetationLayer.CellHeight;
+                    
+                    Target = new Position(targetLon, targetLat);
+
+                    if (Perimeter.IsPointInside(Target)) {
+                        _bearing = Position.GetBearing(Target);
+                        return;
+                    }
+                }
+            }
+        }
+
+        if (false) {
             // Energy is low, so look for water
             var waterSources = WaterLayer.Explore(Position.PositionArray, 10000).ToList();
             if (waterSources.Any()) {
@@ -124,7 +165,7 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
                 }
             }
             else {
-                Console.WriteLine("No water in area");
+                //Console.WriteLine("No water in area");
             }
         }
         else {
@@ -144,6 +185,7 @@ public class Elephant : IAgent<LandscapeLayer>, IPositionable {
             _bearing = (_bearing + 45) % 360;
         }
     }
-
+    
     #endregion
+    
 }

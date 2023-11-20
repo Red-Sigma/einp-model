@@ -19,6 +19,7 @@ internal static class Program
         description.AddLayer<LandscapeLayer>();
         description.AddLayer<Perimeter>();
         description.AddLayer<WaterLayer>();
+        description.AddLayer<VegetationLayer>();
 
         description.AddAgent<Elephant, LandscapeLayer>();
             
