@@ -17,4 +17,4 @@ public class Perimeter : VectorLayer {
     public bool IsPointInside(Position coordinate) {
         return Extent.Contains(coordinate.X, coordinate.Y);
     }
-}
+}    
