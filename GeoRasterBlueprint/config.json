@@ -19,6 +19,10 @@
     {
       "name":"WaterLayer",
       "file":"Resources/einp_water_spots.geojson"
+    },
+    {
+      "name": "VegetationLayer",
+      "file": "Resources/ndvi_december_2022_bounded.asc"
     }
   ],
   "agents": [
