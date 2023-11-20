@@ -3,7 +3,7 @@
     "deltaT": 1,
     "startPoint": "2022-09-12T00:00:00",
     "endPoint": "2022-09-12T11:59:59",
-    "deltaTUnit": "seconds",
+    "deltaTUnit": "hours",
     "console": true,
     "output": "csv",
     "options": {
@@ -18,20 +18,20 @@
     },
     {
       "name":"WaterLayer",
-      "file":"Resources/WaterSpots.geojson"
+      "file":"Resources/einp_water_spots.geojson"
     }
   ],
   "agents": [
     {
-      "name": "Elephant",
+      "name": "Bison",
       "count": 10,
-      "file":"Resources/elephants.csv",
+      "file":"Resources/bisons.csv",
       "outputs": [
         {"kind": "trips"}
       ],
       "mapping": [
         {
-          "parameter" : "Energy",
+          "parameter" : "Hydration",
           "value" : 100
         }
       ]

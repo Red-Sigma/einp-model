@@ -1,228 +1,217 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using GeoRasterBlueprint.Util;
+using Mars.Common;
+using Mars.Components.Layers;
 using Mars.Interfaces.Agents;
+using Mars.Interfaces.Annotations;
 using Mars.Interfaces.Environments;
 using NetTopologySuite.Geometries;
 using Position = Mars.Interfaces.Environments.Position;
 
 namespace GeoRasterBlueprint.Model;
 
-public class BisonAgent: IAgent<LandscapeLayer>, IPositionable, IAnimalAgent 
-{
-    // Constants
+public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
+    
+    #region Properties and Fields
+    
+    [PropertyDescription(Name = "Latitude")]
+    public double Latitude { get; set; }
+    [PropertyDescription(Name = "Longitude")]
+    public double Longitude { get; set; }
+    private double Hydration { get; set; } = MaxHydration;
+    private double Satiety { get; set; } = MaxSatiety;
+    private double _bearing = 222.0;
+    private const double Distance = 5000.0;
+    public Position Position { get; set; }
+    private Position Target { get; set; }
+    private LandscapeLayer LandscapeLayer { get; set; }
+    
+    [PropertyDescription(Name = "WaterLayer")]
+    public WaterLayer WaterLayer { get; set; }
+    
+    [PropertyDescription(Name = "Perimeter")]
+    public Perimeter Perimeter { get; set; }
+    
+    public Guid ID { get; set; }
+    private int HoursWithoutWater { get; set; }
+    private int HoursWithoutFood { get; set; }
+    
+    private bool IsAlive { get; set; } = true;
+    public int Age { get; set; }
+    public int DailyEatingHours = 8;
+    public string Gender { get; set; }
+    public float Health { get; set; }
+    public int UniqueId { get; set; }
+
+    #endregion
+
+    #region Constants
+    
     public const double MaxHydration = 100.0;
     public const double MaxSatiety = 100.0;
-    public const double DehydrationRate = 2.0;
+    public const double DehydrationRate = 20.0;
     public const double StarvationRate = 1.5;
     public const double HoursToDeathWithoutWater = MaxHydration / DehydrationRate;
     public const double HoursToDeathWithoutFood = MaxSatiety / StarvationRate;
     public const int MaxAge = 175200; // Maximum age in hours (20 years)
+
+    #endregion
     
+    #region Initialization
 
-    
-    // Agent properties
-    private double hydration;
-    private double satiety;
-    private int hoursWithoutWater;
-    private int hoursWithoutFood;
-    private int age;
-    private bool isAlive;
-    private int dailyEatingHours;
+    public void Init(LandscapeLayer landscapeLayer) {
+        LandscapeLayer = landscapeLayer;
+        
+        if (Perimeter.IsPointInside(new Position(Longitude, Latitude))) {
+            Position = Position.CreateGeoPosition(Longitude, Latitude);
+        } else {
+            throw new Exception("Start point is not inside perimeter.");
+        }
+    }
 
+    #endregion
 
-    // Initialize the Bison agent
-    
-    public void Init(LandscapeLayer layer)
-    {
-        hydration = MaxHydration;
-        satiety = MaxSatiety;
-        hoursWithoutWater = 0;
-        hoursWithoutFood = 0;
-        age = 0;
-        isAlive = true;
-        dailyEatingHours = 8;
+    #region Tick
+
+    public void Tick() {
+        UpdateState();
+        MoveToWaterSource();
+        // if (Age >= MaxAge) {
+        //     DieOfOldAge();
+        // } else {
+        //     if (Hydration <= 0) {
+        //         MoveToWaterSource();
+        //     } else if (Satiety <= 0) {
+        //         MoveTowardsGrazingArea();
+        //     }else {
+        //         if (CanSeeVegetation()) {
+        //             Graze();
+        //         } else {
+        //             DoRandomWalk();
+        //         }
+        //     }
+        // }
+        // CheckSurvival();
+    }
+
+    #endregion
+
+    private void UpdateState() {
+        Hydration -= DehydrationRate;
+        Satiety -= StarvationRate;
+        HoursWithoutWater++;
+        HoursWithoutFood++;
+        Age++;
+    }
+
+    private void MoveToWaterSource() {
+        int radius = 2000;
+        List<VectorFeature> nearWaterSpots = WaterLayer.Explore(Position.PositionArray, radius).ToList();
+        if (nearWaterSpots.Any()) {
+            var nearest = WaterLayer.Nearest(new []{Position.X, Position.Y});
+
+            var nearestPoints = nearest.VectorStructured.Geometry.Coordinates.ToList();
+            
+            nearestPoints.Sort(new DistanceComparer(Position.X, Position.Y));
+            
+            Target =  new Position(nearestPoints.First().X, nearestPoints.First().Y);
+            
+            _bearing = Position.GetBearing(Target);
+
+            if (Target.DistanceInMTo(Position) < 50) {
+                Hydration += 10;
+                _bearing = (_bearing + 45) % 360;
+            }
+
+            var distanceToTarget = Target.DistanceInMTo(Position);
+            Position = distanceToTarget > Distance
+                ? LandscapeLayer.Environment.MoveTowards(this, _bearing, Distance)
+                : LandscapeLayer.Environment.MoveTowards(this, _bearing, distanceToTarget - 10);
+        }
+        else {
+            Console.WriteLine("No water found in {0}m radius.", radius);
+        }
+    }
+
+    public void DieOfOldAge() {
+        throw new NotImplementedException();
+    }
+
+    public void GiveBirth() {
+        throw new NotImplementedException();
+    }
+
+    public Bison Mate(Bison partner) {
+        throw new NotImplementedException();
+    }
+
+    private bool CanSeeVegetation() {
+        throw new NotImplementedException();
     }
     
-    
-    
-    // Update the state of the Bison agent
-    public void UpdateState()
-    {
-        hydration -= DehydrationRate;
-        satiety -= StarvationRate;
-        hoursWithoutWater++;
-        hoursWithoutFood++;
-        age++;
-    }
-    
-    public void MoveToWatersource()
-    {
-        // Implement the logic to move towards the nearest water source
+    private void MoveTowardsGrazingArea() {
+        throw new NotImplementedException();
     }
 
-    public void DieOfOldAge()
-    {
-        // Handle Bison's death due to old age in the simulation
+    private void Graze() {
+        throw new NotImplementedException();
     }
 
-    public void GiveBirth()
-    {
-        // Implement logic for Bison giving birth
+    private void DoRandomWalk() {
+        throw new NotImplementedException();
     }
 
-    public BisonAgent Mate(BisonAgent partner)
-    {
-        // Implement logic for Bison mating with a partner
-        return new BisonAgent(); // Return a new Bison as a result of mating
-    }
-    
-
-    private bool CanSeeVegetation()
-    {
-        // Implement the logic to check if Bison can see vegetation
-        return false;
-    }
-
-    
-    private void MoveTowardsGrazingArea()
-    {
-        // Implement the logic to move towards the nearest grazing area
-    }
-
-    private void Graze()
-    {
-        // Implement the logic for Bison grazing
-    }
-    private void DoRandomWalk()
-    {
-        // Simulate random movement within the simulation area
-    }
-
-    private void CheckSurvival()
-    {
-        if (hydration <= 0 || satiety <= 0)
-        {
+    private void CheckSurvival() {
+        if (Hydration <= 0 || Satiety <= 0) {
             MarkAsDead();
         }
     }
-    private void MarkAsDead()
-    {
-        // Handle Bison's death due to dehydration or starvation in the simulation
+
+    private void MarkAsDead() {
+        throw new NotImplementedException();
     }
-    
-    // Method to update daily eating hours based on conditions
-    public void UpdateDailyEatingHours()
-    {
-        // Adjust daily eating hours based on season
-      
-        if (IsSummer())
-        {
-            dailyEatingHours = 12; // Example value
+
+    public void UpdateDailyEatingHours() {
+        if (IsSummer()) {
+            DailyEatingHours = 12; // Example value TODO
         }
-        else if (IsWinter())
-        {
-            dailyEatingHours = 8; // Example value
+        else if (IsWinter()) {
+            DailyEatingHours = 8; // Example value TODO
         }
-      
     }
 
-    // Check if it's summer
-    private bool IsSummer()
-    {
-        // Implement logic to check the season
-        //TODO
-        return true; 
-    }
-
-    // Check if it's winter
-    private bool IsWinter()
-    {
-        //TODO
-        return false; 
-    }
-
-    
-    
-    public void Tick()
-    {
-        
-        // Update agent state
-        hydration -= DehydrationRate;
-        satiety -= StarvationRate;
-        hoursWithoutWater++;
-        hoursWithoutFood++;
-        age++;
-
-        // Decide and perform actions
-        if (age >= MaxAge)
-        {
-            DieOfOldAge();
-        }
-        else
-        {
-            if (hydration <= 0)
-            {
-                MoveToWatersource();
-            }
-            else if (satiety <= 0)
-            {
-                MoveTowardsGrazingArea();
-            }
-            else
-            {
-                if (CanSeeVegetation())
-                {
-                    Graze();
-                }
-                else
-                {
-                    DoRandomWalk();
-                }
-            }
-        }
-
-        // Check if the Bison has survived
-        CheckSurvival();
-    }
-    
-    
-
-    public Guid ID { get; set; }
-    public Position Position { get; set; }
-    public int UniqueId { get; set; }
-    public int Age { get;set; }
-    public Point Location { get; set; }
-    public float Health { get;  set;}
-    public string Gender { get; set; }
-    
-    
-    public void Move(Point destination)
-    {
-        // Implement logic for Bison migration to a specified destination
+    private bool IsSummer() {
         throw new NotImplementedException();
     }
 
-    public void Reproduce(IAnimalAgent partner)
-    {
+    private bool IsWinter() {
         throw new NotImplementedException();
     }
 
-    public void Interact(IAnimalAgent agent)
-    {
+    public void Move(Point destination) {
         throw new NotImplementedException();
     }
 
-    public void Eat()
-    {
+    public void Reproduce(IAnimalAgent partner) {
         throw new NotImplementedException();
     }
 
-    public void Die()
-    {
+    public void Interact(IAnimalAgent agent) {
         throw new NotImplementedException();
     }
 
-    public void Drink()
-    {
+    public void Eat() {
         throw new NotImplementedException();
     }
+
+    public void Die() {
+        throw new NotImplementedException();
+    }
+
+    public void Drink() {
+        throw new NotImplementedException();
+    }
+    
 }
