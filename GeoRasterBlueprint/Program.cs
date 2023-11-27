@@ -18,6 +18,7 @@ internal static class Program {
         description.AddLayer<Perimeter>();
         description.AddLayer<WaterLayer>();
         description.AddLayer<VegetationLayer>();
+        description.AddLayer<TemperatureLayer>();
 
         description.AddAgent<Bison, LandscapeLayer>();
 
