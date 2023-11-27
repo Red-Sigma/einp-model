@@ -3,7 +3,6 @@ using System.IO;
 using System;
 using ServiceStack;
 
-
 namespace GeoRasterBlueprint.Model;
 
 public class TemperatureLayer: AbstractLayer
@@ -11,10 +10,15 @@ public class TemperatureLayer: AbstractLayer
     private string[] temps;
     public TemperatureLayer()
     {
-        Console.WriteLine(Directory.GetCurrentDirectory());
-        String path = Directory.GetCurrentDirectory()+ "\\Resources\\open-meteo-53.60N112.93W736m.csv";
-        temps = File.ReadAllLines(path);
-
+        String path = Directory.GetCurrentDirectory() + "\\Resources\\open-meteo-53.60N112.93W736m.csv";
+        try
+        {
+            temps = File.ReadAllLines(path);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error reading temperature file: "+ e.Message);
+        }
     }
 
     public double GetTemperature(long tick)
