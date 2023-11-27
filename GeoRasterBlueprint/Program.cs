@@ -19,6 +19,7 @@ internal static class Program
         description.AddLayer<LandscapeLayer>();
         description.AddLayer<Perimeter>();
         description.AddLayer<WaterLayer>();
+        description.AddLayer<TemperatureLayer>();
 
         description.AddAgent<Elephant, LandscapeLayer>();
             
@@ -29,7 +30,7 @@ internal static class Program
         // Create simulation task
         var simStarter = SimulationStarter.Start(description, config);
             
-        // Run simulation
+        // Run simulationdd
         var results = simStarter.Run();
             
         // Feedback to user that simulation run was successful
