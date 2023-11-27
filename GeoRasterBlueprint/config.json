@@ -18,7 +18,7 @@
     },
     {
       "name":"WaterLayer",
-      "file":"Resources/WaterSpots.geojson"
+      "file":"Resources/einp_water_spots.geojson"
     },
     {
       "name": "TemperatureLayer",
@@ -27,15 +27,15 @@
   ],
   "agents": [
     {
-      "name": "Elephant",
+      "name": "Bison",
       "count": 10,
-      "file":"Resources/elephants.csv",
+      "file":"Resources/bisons.csv",
       "outputs": [
         {"kind": "trips"}
       ],
       "mapping": [
         {
-          "parameter" : "Energy",
+          "parameter" : "Hydration",
           "value" : 100
         }
       ]
