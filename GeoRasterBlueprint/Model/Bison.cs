@@ -34,6 +34,9 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     [PropertyDescription(Name = "Perimeter")]
     public Perimeter Perimeter { get; set; }
     
+    [PropertyDescription(Name = "VegetationLayer")]
+    public VegetationLayer VegetationLayer { get; set; }
+    
     public Guid ID { get; set; }
     private int HoursWithoutWater { get; set; }
     private int HoursWithoutFood { get; set; }
@@ -53,6 +56,7 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     public const double MaxSatiety = 100.0;
     public const double DehydrationRate = 20.0;
     public const double StarvationRate = 1.5;
+    private int TickSearchForFood = 10;
     public const double HoursToDeathWithoutWater = MaxHydration / DehydrationRate;
     public const double HoursToDeathWithoutFood = MaxSatiety / StarvationRate;
     public const int MaxAge = 175200; // Maximum age in hours (20 years)
@@ -78,6 +82,11 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     public void Tick() {
         UpdateState();
         MoveToWaterSource();
+        if (Satiety < 40) {
+            if (LandscapeLayer.GetCurrentTick() % TickSearchForFood == 0) {
+                SearchForFood();
+            }
+        }
         // if (Age >= MaxAge) {
         //     DieOfOldAge();
         // } else {
@@ -132,6 +141,29 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
         }
         else {
             Console.WriteLine("No water found in {0}m radius.", radius);
+        }
+    }
+
+    private void SearchForFood() {
+        if (VegetationLayer.IsPointInside(Position)) {
+            var all = VegetationLayer.Explore(Position, double.MaxValue, 4);
+            var res = all.OrderBy(a => a.Node.Value).Last();
+            if (res.Node?.NodePosition != null) {
+
+                var targetX = res.Node.NodePosition.X;
+                var targetY = res.Node.NodePosition.Y;
+
+                var targetLon = VegetationLayer.LowerLeft.X +
+                                targetX * VegetationLayer.CellWidth;
+                var targetLat = VegetationLayer.LowerLeft.Y +
+                                targetY * VegetationLayer.CellHeight;
+
+                Target = new Position(targetLon, targetLat);
+
+                if (Perimeter.IsPointInside(Target)) {
+                    _bearing = Position.GetBearing(Target);
+                }
+            }
         }
     }
 
