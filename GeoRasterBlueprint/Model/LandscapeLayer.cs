@@ -13,8 +13,20 @@ using NetTopologySuite.Geometries;
 namespace GeoRasterBlueprint.Model;
 
 public class LandscapeLayer : AbstractLayer {
+    
+    #region Properties and Fields
+
+    private List<Bison> Bisons { get; set; }
+
+    [PropertyDescription(Name = "Perimeter")]
+    public Perimeter Fence { get; set; }
+
+    public GeoHashEnvironment<Bison> Environment { get; set; }
+
+    #endregion
+    
     /// <summary>
-    /// The LandscapeLayer registers the Elephants in the runtime system. In this way, the tick methods
+    /// The LandscapeLayer registers the animals in the runtime system. In this way, the tick methods
     /// of the agents can be executed later. Then the expansion of the simulation area is calculated using
     /// the raster layers described in config.json. An environment is created with this bounding box.
     /// </summary>
@@ -31,22 +43,12 @@ public class LandscapeLayer : AbstractLayer {
         Console.WriteLine(new BoundingBox(baseExtent));
 
         // Create GeoHashEnvironment with the calculated extent
-        Environment = GeoHashEnvironment<Elephant>.BuildByBBox(new BoundingBox(baseExtent), 1000);
+        Environment = GeoHashEnvironment<Bison>.BuildByBBox(new BoundingBox(baseExtent), 1000);
 
         var agentManager = layerInitData.Container.Resolve<IAgentManager>();
-        Elephants = agentManager.Spawn<Elephant, LandscapeLayer>().ToList();
+        Bisons = agentManager.Spawn<Bison, LandscapeLayer>().ToList();
 
-        return Elephants.Count > 0;
+        return Bisons.Count > 0;
     }
-
-    #region Properties and Fields
-
-    public List<Elephant> Elephants { get; set; }
-
-    [PropertyDescription(Name = "Perimeter")]
-    public Perimeter Fence { get; set; }
-
-    public GeoHashEnvironment<Elephant> Environment { get; set; }
-
-    #endregion
+    
 }
