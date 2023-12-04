@@ -7,24 +7,27 @@ namespace GeoRasterBlueprint.Model;
 
 public class TemperatureLayer: AbstractLayer
 {
-    private string[] temps;
+    private string[] _temps;
+    
+    #region Constructor
     public TemperatureLayer()
     {
         String path = Directory.GetCurrentDirectory() + "\\Resources\\open-meteo-53.60N112.93W736m.csv";
         try
         {
-            temps = File.ReadAllLines(path);
+            _temps = File.ReadAllLines(path);
         }
         catch (Exception e)
         {
             Console.WriteLine("Error reading temperature file: "+ e.Message);
         }
     }
+    #endregion
 
     public double GetTemperature(long tick)
     {
         // + 4 because first 4 lines are discarded
-        string[] parsed = temps[tick + 4].Split(',');
+        string[] parsed = _temps[tick + 4].Split(',');
         return parsed[1].ToDouble();
     }
 }
