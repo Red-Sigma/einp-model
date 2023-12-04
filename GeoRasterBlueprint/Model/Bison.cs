@@ -58,7 +58,10 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     #endregion
 
     #region Constants
-    
+
+    public static Random _random = new Random();
+    private const int RandomWalkMaxDistanceInM = 5000;
+    private const int RandomWalkMinDistanceInM = 100;
     public const double MaxHydration = 100.0;
     public const double MaxSatiety = 100.0;
     public const double DehydrationRate = 20.0;
@@ -87,12 +90,14 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     #region Tick
 
     public void Tick() {
-        UpdateState();
-        MoveToWaterSource();
-        if (Satiety < 40) {
+        if (Hydration < 40) {
+            MoveToWaterSource();
+        } else if (Satiety < 40) {
             if (LandscapeLayer.GetCurrentTick() % TickSearchForFood == 0) {
                 SearchForFood();
             }
+        } else {
+            DoRandomWalk(10);
         }
         
         // if (Age >= MaxAge) {
@@ -110,6 +115,7 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
         //         }
         //     }
         // }
+        UpdateState();
         // CheckSurvival();
     }
 
@@ -157,7 +163,6 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
             var all = VegetationLayer.Explore(Position, double.MaxValue, 4);
             var res = all.OrderBy(a => a.Node.Value).Last();
             if (res.Node?.NodePosition != null) {
-
                 var targetX = res.Node.NodePosition.X;
                 var targetY = res.Node.NodePosition.Y;
 
@@ -199,8 +204,24 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
         throw new NotImplementedException();
     }
 
-    private void DoRandomWalk() {
-        throw new NotImplementedException();
+    private void DoRandomWalk(int numOfAttempts) {
+        bool walkedSuccessfully = false;
+        
+        while (numOfAttempts > 0 && !walkedSuccessfully) {
+            var randomDistance = _random.Next(RandomWalkMinDistanceInM, RandomWalkMaxDistanceInM);
+            var randomDirection = _random.Next(0, 360);
+            
+            var targetPosition = Position.GetRelativePosition(randomDirection, randomDistance);
+
+            if (Perimeter.IsPointInside(targetPosition) && !WaterLayer.IsIntersectsAny(Position, targetPosition)) {
+                var newCurrentPosition = LandscapeLayer.Environment.MoveTowards(this, randomDirection, randomDistance);
+                if (newCurrentPosition != null) {
+                    walkedSuccessfully = true;
+                }
+            }
+
+            numOfAttempts--;
+        }
     }
 
     private void CheckSurvival() {
