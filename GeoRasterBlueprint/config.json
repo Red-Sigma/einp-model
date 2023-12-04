@@ -27,6 +27,10 @@
     {
       "name": "TemperatureLayer",
       "file": "Resources/open-meteo-53.60N112.93W736m.csv"
+    },
+    {
+      "name": "AltitudeLayer",
+      "file": "Resources/heights.asc"
     }
   ],
   "agents": [
