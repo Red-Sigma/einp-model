@@ -22,6 +22,7 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     public double Longitude { get; set; }
     private double Hydration { get; set; } = MaxHydration;
     private double Satiety { get; set; } = MaxSatiety;
+    
     private double _bearing = 222.0;
     private const double Distance = 5000.0;
     public Position Position { get; set; }
@@ -37,6 +38,9 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     [PropertyDescription(Name = "VegetationLayer")]
     public VegetationLayer VegetationLayer { get; set; }
     
+    [PropertyDescription(Name= "TemperatureLayer")]
+    public TemperatureLayer TemperatureLayer { get; set; }  
+    
     public Guid ID { get; set; }
     private int HoursWithoutWater { get; set; }
     private int HoursWithoutFood { get; set; }
@@ -47,6 +51,7 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
     public string Gender { get; set; }
     public float Health { get; set; }
     public int UniqueId { get; set; }
+    public AnimalLifePeriod _LifePeriod;
 
     #endregion
 
@@ -87,6 +92,7 @@ public class Bison : IAgent<LandscapeLayer>, IPositionable, IAnimalAgent {
                 SearchForFood();
             }
         }
+        
         // if (Age >= MaxAge) {
         //     DieOfOldAge();
         // } else {
