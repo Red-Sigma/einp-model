@@ -12,7 +12,7 @@ public class TemperatureLayer: AbstractLayer
     #region Constructor
     public TemperatureLayer()
     {
-        String path = Directory.GetCurrentDirectory() + "\\Resources\\open-meteo-53.60N112.93W736m.csv";
+        String path = Directory.GetCurrentDirectory() + "/Resources/open-meteo-53.60N112.93W736m.csv";
         try
         {
             _temps = File.ReadAllLines(path);
