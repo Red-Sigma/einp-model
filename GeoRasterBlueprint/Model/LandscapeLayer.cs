@@ -16,7 +16,7 @@ public class LandscapeLayer : AbstractLayer {
     
     #region Properties and Fields
 
-    private List<Bison> Bisons { get; set; }
+    public List<Bison> Bisons { get; set; }
 
     [PropertyDescription(Name = "Perimeter")]
     public Perimeter Fence { get; set; }

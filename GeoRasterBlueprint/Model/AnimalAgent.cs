@@ -11,6 +11,6 @@ public interface IAnimalAgent {
     void Reproduce(IAnimalAgent partner);
     void Interact(IAnimalAgent agent);
     void Eat();
-    void Die();
+    void Die(MattersOfDeath mannersOfDeath);
     void Drink();
 }
