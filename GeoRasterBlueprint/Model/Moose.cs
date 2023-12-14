@@ -1,9 +1,9 @@
-﻿using Mars.Interfaces.Annotations;
+using Mars.Interfaces.Annotations;
 using Mars.Interfaces.Environments;
 
-namespace GeoRasterBlueprint.Model;
+namespace GeoRasterBlueprint.Model; 
 
-public class Bison : AbstractAnimal {
+public class Moose : AbstractAnimal {
     
     #region Properties and Fields
     
@@ -19,8 +19,8 @@ public class Bison : AbstractAnimal {
     #endregion
 
     public override void Tick() {
-       DoRandomWalk(10);
-       UpdateState();
+        DoRandomWalk(10);
+        UpdateState();
     }
     
 }

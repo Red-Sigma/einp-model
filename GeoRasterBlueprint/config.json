@@ -36,16 +36,23 @@
   "agents": [
     {
       "name": "Bison",
-      "count": 10,
       "file":"Resources/bisons.csv",
       "outputs": [
         {"kind": "trips"}
-      ],
-      "mapping": [
-        {
-          "parameter" : "Hydration",
-          "value" : 100
-        }
+      ]
+    },
+    {
+      "name": "Moose",
+      "file":"Resources/moose.csv",
+      "outputs": [
+        {"kind": "trips"}
+      ]
+    },
+    {
+      "name": "Elk",
+      "file":"Resources/elks.csv",
+      "outputs": [
+        {"kind": "trips"}
       ]
     }
   ]

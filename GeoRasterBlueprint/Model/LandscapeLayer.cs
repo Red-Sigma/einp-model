@@ -15,13 +15,14 @@ namespace GeoRasterBlueprint.Model;
 public class LandscapeLayer : AbstractLayer {
     
     #region Properties and Fields
+    
+    public static GeoHashEnvironment<AbstractAnimal> Environment { get; set; }
 
     private List<Bison> Bisons { get; set; }
-
+    private List<Moose> Moose { get; set; }
+    private List<Elk> Elks { get; set; }
     [PropertyDescription(Name = "Perimeter")]
     public Perimeter Fence { get; set; }
-
-    public GeoHashEnvironment<Bison> Environment { get; set; }
 
     #endregion
     
@@ -43,12 +44,14 @@ public class LandscapeLayer : AbstractLayer {
         Console.WriteLine(new BoundingBox(baseExtent));
 
         // Create GeoHashEnvironment with the calculated extent
-        Environment = GeoHashEnvironment<Bison>.BuildByBBox(new BoundingBox(baseExtent), 1000);
+        Environment = GeoHashEnvironment<AbstractAnimal>.BuildByBBox(new BoundingBox(baseExtent), 1000);
 
         var agentManager = layerInitData.Container.Resolve<IAgentManager>();
         Bisons = agentManager.Spawn<Bison, LandscapeLayer>().ToList();
-
-        return Bisons.Count > 0;
+        Moose = agentManager.Spawn<Moose, LandscapeLayer>().ToList();
+        Elks = agentManager.Spawn<Elk, LandscapeLayer>().ToList();
+        
+        return Bisons.Count + Moose.Count + Elks.Count > 0;
     }
     
 }
