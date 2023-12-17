@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Mars.Interfaces.Annotations;
 using Mars.Interfaces.Environments;
 
@@ -19,8 +21,55 @@ public class Elk : AbstractAnimal {
     #endregion
 
     public override void Tick() {
+        _hoursLived++;
+        if (_hoursLived == 300)
+        {
+            if (!IsAlive) return; 
+            YearlyRoutine();
+        }
         DoRandomWalk(10);
         UpdateState();
+    }
+    
+    public override void YearlyRoutine() {
+        _hoursLived = 0;
+        Age++;
+
+        //decide sex once the bison reaches the adult stage
+        var newLifePeriod = GetAnimalLifePeriodFromAge(Age);
+        if (newLifePeriod != _LifePeriod) {
+            if (newLifePeriod == AnimalLifePeriod.Adult) {
+                //50:50 chance of being male or female
+                if (_random.Next(2) == 0)
+                    _animalType = AnimalType.ElkBull;
+                else
+                    _animalType = AnimalType.ElkCow;
+            }
+            _LifePeriod = newLifePeriod;
+        }
+
+        //max age 25
+        if (Age > 15)
+        {
+            _chanceOfDeath = (Age - 15) * 10;
+            var rnd = _random.Next(0, 100);
+            if (rnd >= _chanceOfDeath) return;
+            Die(MattersOfDeath.Age);
+            return;
+        }
+
+        //check for possible reproduction
+        if (!_reproductionYears.Contains(Age)) return;
+
+        if (!_animalType.Equals(AnimalType.ElkBull)) return;
+
+        _pregnant = true;
+    }
+    
+    public override AnimalLifePeriod GetAnimalLifePeriodFromAge(int age)
+    {
+        if (age < 1) return AnimalLifePeriod.Calf;
+        return age <= 2 ? AnimalLifePeriod.Adolescent : AnimalLifePeriod.Adult;
     }
     
 }
