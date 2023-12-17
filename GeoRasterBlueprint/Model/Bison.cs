@@ -50,7 +50,22 @@ public class Bison : AbstractAnimal {
 
     protected override void UpdateState()
     {
-        throw new NotImplementedException();
+        int currentHour;
+        if (LandscapeLayer.Context.CurrentTimePoint != null)
+            currentHour = LandscapeLayer.Context.CurrentTimePoint.Value.Hour;
+        else
+            throw new NullReferenceException();
+        
+
+        if (currentHour is >= 21 and <= 23 || currentHour is >= 0 and <= 4 ) {   
+            BurnSatiety(_satietyIntakeHourly[_LifePeriod] / 4); //less food is consumed while sleeping
+            Dehydrate(_dehydrationRate[_LifePeriod]/2);           //less water is consumed at night
+        }
+        else
+        {
+            BurnSatiety(_satietyIntakeHourly[_LifePeriod]);
+            Dehydrate(_dehydrationRate[_LifePeriod]);
+        }
     }
     
     public override void YearlyRoutine() {

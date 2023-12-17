@@ -136,12 +136,24 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
 
     protected void BurnSatiety(double rate)
     {
-        Satiety -= rate;
+        if (Satiety > 0) {
+            if (Satiety > rate) {
+                Satiety -= rate;
+            } else {
+                Satiety = 0;
+            }
+        }
     }
 
     protected void Dehydrate(double rate)
     {
-        Hydration -= rate;
+        if (Hydration > 0) {
+            if (Hydration > rate) {
+                Hydration -= rate;
+            } else {
+                Hydration = 0;
+            }
+        }
     }
     public abstract void YearlyRoutine();
 
