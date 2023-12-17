@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mars.Interfaces.Annotations;
 using Mars.Interfaces.Environments;
@@ -19,7 +20,23 @@ public class Bison : AbstractAnimal {
     public override double Longitude { get; set; }
 
     #endregion
-
+    #region Constants
+    private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
+    {
+        //food per day (kg) / 16 (hours)
+        { AnimalLifePeriod.Calf, 0.56 }, //9kg per day
+        { AnimalLifePeriod.Adolescent, 1.81 }, //20-29 kg per day
+        { AnimalLifePeriod.Adult, 3.75 } //60 kg per day, 113 liter
+    };
+    
+    private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
+        new()
+        {
+            { AnimalLifePeriod.Calf, 0.7 }, // daily water consumption 17.0 = 9 / 60 *  113, divided by 24
+            { AnimalLifePeriod.Adolescent, 2.29 }, //daily water consumption 55.0 =  29 / 60 * 113, all divided by 24
+            { AnimalLifePeriod.Adult, 4.7} //daily water consumption 113, divided by 24
+        };
+    #endregion
     public override void Tick() {
        _hoursLived++;
        if (_hoursLived == 300)
@@ -29,6 +46,11 @@ public class Bison : AbstractAnimal {
        }
        DoRandomWalk(10);
        UpdateState();
+    }
+
+    protected override void UpdateState()
+    {
+        throw new NotImplementedException();
     }
     
     public override void YearlyRoutine() {

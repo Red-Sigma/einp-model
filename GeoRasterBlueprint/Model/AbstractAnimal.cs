@@ -131,23 +131,18 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
         }
     }
     
-    protected void UpdateState() {
-        if (Hydration > 0) {
-            if (Hydration > DehydrationRate) {
-                Hydration -= DehydrationRate;
-            } else {
-                Hydration = 0;
-            }
-        }
-        if (Satiety > 0) {
-            if (Satiety > StarvationRate) {
-                Satiety -= StarvationRate;
-            } else {
-                Satiety = 0;
-            }
-        }
+    //every animals has different ways to consume food or hydration
+    protected abstract void UpdateState();
+
+    protected void BurnSatiety(double rate)
+    {
+        Satiety -= rate;
     }
 
+    protected void Dehydrate(double rate)
+    {
+        Hydration -= rate;
+    }
     public abstract void YearlyRoutine();
 
     public abstract AnimalLifePeriod GetAnimalLifePeriodFromAge(int age);

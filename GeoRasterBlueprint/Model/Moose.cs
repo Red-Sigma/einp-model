@@ -30,7 +30,12 @@ public class Moose : AbstractAnimal {
         DoRandomWalk(10);
         UpdateState();
     }
-    
+
+    protected override void UpdateState()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void YearlyRoutine() {
         _hoursLived = 0;
         Age++;
