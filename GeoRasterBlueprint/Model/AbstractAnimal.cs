@@ -25,6 +25,16 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public WaterLayer WaterLayer { get; set; }
     public VegetationLayer VegetationLayer { get; set; }
     
+    public int _hoursLived;
+    public AnimalType _animalType;
+    public readonly int[] _reproductionYears = {2, 15};
+    public bool _pregnant;
+    public int _chanceOfDeath;
+    public int Age { get; set; }
+    public AnimalLifePeriod _LifePeriod;
+    public MattersOfDeath MatterOfDeath { get; private set; }
+    public bool IsAlive { get; set; } = true;
+    
     public static Random _random = new ();
     private const int RandomWalkMaxDistanceInM = 5000;
     private const int RandomWalkMinDistanceInM = 100;
@@ -32,6 +42,7 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public const double MaxSatiety = 100.0;
     public const double DehydrationRate = 20.0;
     public const double StarvationRate = 1.5;
+    public const int MaxAge = 25;
 
     public void Init(LandscapeLayer layer) {
         LandscapeLayer = layer;
@@ -135,6 +146,17 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
                 Satiety = 0;
             }
         }
+    }
+
+    public abstract void YearlyRoutine();
+
+    public abstract AnimalLifePeriod GetAnimalLifePeriodFromAge(int age);
+    
+    public void Die(MattersOfDeath mannerOfDeath)
+    {
+        MatterOfDeath = mannerOfDeath;
+        IsAlive = false;
+        //add removal of animal
     }
     
 }
