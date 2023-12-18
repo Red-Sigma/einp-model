@@ -20,14 +20,26 @@ public class Bison : AbstractAnimal {
 
     #endregion
 
-    public override void Tick() {
+    public override void Tick() { 
+       if (!IsAlive) return;
        _hoursLived++;
        if (_hoursLived == 300)
        {
-           if (!IsAlive) return;
            YearlyRoutine();
        }
-       DoRandomWalk(10);
+       if (!IsAlive) return;
+       
+       if (Satiety < 40) {
+           SearchForFood();
+       }
+       else if (Hydration < 40) {
+           MoveToWaterSource();
+           // currently buggy because we walk into water
+           Hydration += 20;
+       }
+       else {
+           DoRandomWalk(10);
+       }
        UpdateState();
     }
     
