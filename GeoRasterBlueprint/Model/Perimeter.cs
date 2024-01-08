@@ -1,5 +1,7 @@
+using System.Linq;
 using Mars.Components.Layers;
-using Mars.Interfaces.Environments;
+using NetTopologySuite.Geometries;
+using Position = Mars.Interfaces.Environments.Position;
 
 namespace GeoRasterBlueprint.Model;
 
@@ -15,6 +17,6 @@ public class Perimeter : VectorLayer {
     ///     Returns true if the coordinate is inside the perimeter.
     /// </returns>
     public bool IsPointInside(Position coordinate) {
-        return Extent.Contains(coordinate.X, coordinate.Y);
+        return Features.First().VectorStructured.Geometry.Contains(new Point(coordinate.X, coordinate.Y));
     }
-}    
+}
