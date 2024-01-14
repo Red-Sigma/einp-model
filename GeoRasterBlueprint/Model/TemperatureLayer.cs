@@ -1,14 +1,16 @@
 ﻿using Mars.Components.Layers;
 using System.IO;
 using System;
+using NetTopologySuite.Geometries;
 using ServiceStack;
-
+using Mars.Interfaces.Environments;
 namespace GeoRasterBlueprint.Model;
 
-public class TemperatureLayer: AbstractLayer
+public class TemperatureLayer: RasterLayer
 {
     private string[] _temps;
     
+    /*
     #region Constructor
     public TemperatureLayer()
     {
@@ -23,11 +25,10 @@ public class TemperatureLayer: AbstractLayer
         }
     }
     #endregion
-
-    public double GetTemperature(long tick)
+    */
+    
+    public double GetTemperature(Mars.Interfaces.Environments.Position position)
     {
-        // + 4 because first 4 lines are discarded
-        string[] parsed = _temps[tick + 4].Split(',');
-        return parsed[1].ToDouble();
-    }
+        return GetValue(position);
+    } 
 }

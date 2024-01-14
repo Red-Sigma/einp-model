@@ -38,6 +38,7 @@ public class Bison : AbstractAnimal {
         };
     #endregion
     public override void Tick() {
+        //Console.WriteLine("Perceived Temperature {0}", TemperatureLayer.GetValue(Position));
        _hoursLived++;
        if (_hoursLived == 300)
        {

@@ -25,6 +25,8 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public WaterLayer WaterLayer { get; set; }
     public VegetationLayer VegetationLayer { get; set; }
     
+    public TemperatureLayer TemperatureLayer { get; set; }
+    
     public int _hoursLived;
     public AnimalType _animalType;
     public readonly int[] _reproductionYears = {2, 15};
