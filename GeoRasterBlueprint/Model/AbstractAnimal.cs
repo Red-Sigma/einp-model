@@ -112,7 +112,7 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
 
     protected void SearchForFood() {
         if (VegetationLayer.IsPointInside(Position)) {
-            var all = VegetationLayer.Explore(Position, double.MaxValue, 4);
+            var all = VegetationLayer.Explore(Position, 20, 4);
             var res = all.OrderBy(a => a.Node.Value).Last();
             if (res.Node?.NodePosition != null) {
                 var targetX = res.Node.NodePosition.X;
