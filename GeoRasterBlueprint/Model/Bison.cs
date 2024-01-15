@@ -37,17 +37,29 @@ public class Bison : AbstractAnimal {
             { AnimalLifePeriod.Adult, 4.7} //daily water consumption 113, divided by 24
         };
     #endregion
-    public override void Tick() {
-       _hoursLived++;
-       if (_hoursLived == 300)
-       {
-           if (!IsAlive) return;
-           YearlyRoutine();
-       }
-       DoRandomWalk(10);
-       UpdateState();
+    
+    public override void Tick() { 
+        if (!IsAlive) return;
+        _hoursLived++;
+        if (_hoursLived == 300)
+        {
+            YearlyRoutine();
+        }
+        if (!IsAlive) return;
+       
+        if (Satiety < 40) {
+            SearchForFood();
+        }
+        else if (Hydration < 40) {
+            MoveToWaterSource();
+            // currently buggy because we walk into water
+            Hydration += 20;
+        }
+        else {
+            DoRandomWalk(10);
+        }
+        UpdateState();
     }
-
     protected override void UpdateState()
     {
         int currentHour;

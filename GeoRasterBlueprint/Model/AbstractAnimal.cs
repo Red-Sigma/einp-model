@@ -36,12 +36,12 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public bool IsAlive { get; set; } = true;
     
     public static Random _random = new ();
-    private const int RandomWalkMaxDistanceInM = 5000;
-    private const int RandomWalkMinDistanceInM = 100;
+    private const int RandomWalkMaxDistanceInM = 500;
+    private const int RandomWalkMinDistanceInM = 10;
     public const double MaxHydration = 100.0;
     public const double MaxSatiety = 100.0;
-    public const double DehydrationRate = 20.0;
-    public const double StarvationRate = 1.5;
+    public const double DehydrationRate = 6.0;
+    public const double StarvationRate = 4.0;
     public const int MaxAge = 25;
 
     public void Init(LandscapeLayer layer) {
@@ -69,7 +69,8 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
             
             var targetPosition = Position.GetRelativePosition(randomDirection, randomDistance);
 
-            if (Perimeter.IsPointInside(targetPosition) && !WaterLayer.IsIntersectsAny(Position, targetPosition)) {
+            // removed for being bugged && !WaterLayer.IsIntersectsAny(Position, targetPosition)
+            if (Perimeter.IsPointInside(targetPosition)) {
                 var newCurrentPosition = Move(this, randomDirection, randomDistance);
                 if (newCurrentPosition != null) {
                     walkedSuccessfully = true;
@@ -95,7 +96,7 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
             Bearing = Position.GetBearing(Target);
 
             if (Target.DistanceInMTo(Position) < 50) {
-                Hydration += 10;
+                Hydration += 20;
                 Bearing = (Bearing + 45) % 360;
             }
 
@@ -125,7 +126,13 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
                 Target = new Position(targetLon, targetLat);
 
                 if (Perimeter.IsPointInside(Target)) {
+                    Satiety += 12;
+                    var oldPos = Position;
+                    var distanceToTarget = Target.DistanceInMTo(Position);
                     Bearing = Position.GetBearing(Target);
+                    Position = distanceToTarget > Distance
+                        ? Move(this, Bearing, Distance)
+                        : Move(this, Bearing, distanceToTarget);
                 }
             }
         }
