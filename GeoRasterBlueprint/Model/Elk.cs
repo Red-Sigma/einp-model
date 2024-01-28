@@ -23,24 +23,50 @@ public class Elk : AbstractAnimal {
     
     #region constants
     
-    //TODO use real Elk data
-    private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
+    private readonly Dictionary<AnimalLifePeriod, double> _starvationRate = new()
     {
-        //food per day (kg) / 16 (hours)
-        { AnimalLifePeriod.Calf, 0.56 }, //9kg per day
-        { AnimalLifePeriod.Adolescent, 1.81 }, //20-29 kg per day
-        { AnimalLifePeriod.Adult, 3.75 } //60 kg per day, 113 liter
+        /*
+         * DailyFood / 16 is the gross starvation rate
+         * but MaxSatiety = 100 != total food need per day
+         * so the rate has to be adjusted
+         * Total food need per day : 100 = (Total food need per day / 24) : adjusted rate
+         */
+        { AnimalLifePeriod.Calf, MaxSatiety * DailyFoodCalf / 16 / DailyFoodAdult }, 
+        { AnimalLifePeriod.Adolescent, MaxSatiety * DailyFoodAdolescent / 16 / DailyFoodAdult }, 
+        { AnimalLifePeriod.Adult, MaxSatiety * DailyFoodAdult / 16 / DailyFoodAdult }  
     };
     
     private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
         new()
         {
-            { AnimalLifePeriod.Calf, 0.7 }, // daily water consumption 17.0 = 9 / 60 *  113, divided by 24
-            { AnimalLifePeriod.Adolescent, 2.29 }, //daily water consumption 55.0 =  29 / 60 * 113, all divided by 24
-            { AnimalLifePeriod.Adult, 4.7} //daily water consumption 113, divided by 24
+            /*
+             * DailyWater / 24 is the gross starvation rate
+             * but MaxHydration = 100 != total food need per day
+             * so the rate has to be adjusted
+             * Total water need per day : 100 = (Total water need per day / 24) : adjusted rate
+             */
+            { AnimalLifePeriod.Calf, MaxHydration * DailyWaterCalf / 24 / DailyWaterAdult },
+            { AnimalLifePeriod.Adolescent, MaxHydration * DailyWaterAdolescent / 24 / DailyWaterAdult}, 
+            { AnimalLifePeriod.Adult, MaxHydration * DailyWaterAdult / 24 / DailyWaterAdult}
         };
+
+    [PropertyDescription]
+    public static double DailyFoodAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyFoodCalf { get; set; } 
+    [PropertyDescription]
+    public static double DailyFoodAdolescent { get; set; }
+    
+    //total need of water per day in liters   
+    [PropertyDescription]
+    public static double DailyWaterAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterCalf { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterAdolescent { get; set; }
     #endregion
     public override void Tick() {
+        
         if (!IsAlive) return;
         _hoursLived++;
         if (_hoursLived == 300)
@@ -74,12 +100,12 @@ public class Elk : AbstractAnimal {
         
 
         if (currentHour is >= 21 and <= 23 || currentHour is >= 0 and <= 4 ) {   
-            BurnSatiety(_satietyIntakeHourly[_LifePeriod] / 4); //less food is consumed while sleeping
+            BurnSatiety(_starvationRate[_LifePeriod] / 4); //less food is consumed while sleeping
             Dehydrate(_dehydrationRate[_LifePeriod]/2);           //less water is consumed at night
         }
         else
         {
-            BurnSatiety(_satietyIntakeHourly[_LifePeriod]);
+            BurnSatiety(_starvationRate[_LifePeriod]);
             Dehydrate(_dehydrationRate[_LifePeriod]);
         }
     }
