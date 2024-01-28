@@ -46,7 +46,6 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public const int MaxAge = 25;
 
     
-    
     public void Init(LandscapeLayer layer) {
         LandscapeLayer = layer;
         

@@ -36,6 +36,32 @@
   "agents": [
     {
       "name": "Bison",
+      "mapping": [
+        {
+          "parameter": "DailyFoodAdult",
+          "value": 60
+        },
+        {
+          "parameter": "DailyFoodAdolescent",
+          "value": 29
+        },
+        {
+          "parameter": "DailyFoodCalf",
+          "value": 9
+        },
+        {
+          "parameter": "DailyWaterAdult",
+          "value": 113
+        },
+        {
+          "parameter": "DailyWaterAdolescent",
+          "value": 55
+        },
+        {
+          "parameter": "DailyWaterCalf",
+          "value": 17
+        }
+      ],
       "file":"Resources/bisons.csv",
       "outputs": [
         {"kind": "trips"}
@@ -43,6 +69,32 @@
     },
     {
       "name": "Moose",
+      "mapping": [
+        {
+          "parameter": "DailyFoodAdult",
+          "value": 27
+        },
+        {
+          "parameter": "DailyFoodAdolescent",
+          "value": 13
+        },
+        {
+          "parameter": "DailyFoodCalf",
+          "value": 4
+        },
+        {
+          "parameter": "DailyWaterAdult",
+          "value": 529
+        },
+        {
+          "parameter": "DailyWaterAdolescent",
+          "value": 258
+        },
+        {
+          "parameter": "DailyWaterCalf",
+          "value": 79
+        }
+      ],
       "file":"Resources/moose.csv",
       "outputs": [
         {"kind": "trips"}
@@ -50,6 +102,32 @@
     },
     {
       "name": "Elk",
+      "mapping": [
+        {
+          "parameter": "DailyFoodAdult",
+          "value": 9.1
+        },
+        {
+          "parameter": "DailyFoodAdolescent",
+          "value": 4.2
+        },
+        {
+          "parameter": "DailyFoodCalf",
+          "value": 2.0
+        },
+        {
+          "parameter": "DailyWaterAdult",
+          "value": 60
+        },
+        {
+          "parameter": "DailyWaterAdolescent",
+          "value": 29
+        },
+        {
+          "parameter": "DailyWaterCalf",
+          "value": 9
+        }
+      ],
       "file":"Resources/elks.csv",
       "outputs": [
         {"kind": "trips"}
