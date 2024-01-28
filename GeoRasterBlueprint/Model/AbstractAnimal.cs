@@ -34,16 +34,19 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public AnimalLifePeriod _LifePeriod;
     public MattersOfDeath MatterOfDeath { get; private set; }
     public bool IsAlive { get; set; } = true;
+
+    protected bool isLeading { get; }
+    protected int herdId { get; } 
     
     public static Random _random = new ();
     private const int RandomWalkMaxDistanceInM = 500;
     private const int RandomWalkMinDistanceInM = 10;
     public const double MaxHydration = 100.0;
-    public const double MaxSatiety = 100.0;
-    public const double DehydrationRate = 6.0;
-    public const double StarvationRate = 4.0;
+    public const double MaxSatiety = 100.0; 
     public const int MaxAge = 25;
 
+    
+    
     public void Init(LandscapeLayer layer) {
         LandscapeLayer = layer;
         

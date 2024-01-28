@@ -19,6 +19,7 @@ public class Moose : AbstractAnimal {
     [PropertyDescription(Name = "Longitude")]
     public override double Longitude { get; set; }
 
+    protected string MooseType;
     #endregion
 
     #region Constants

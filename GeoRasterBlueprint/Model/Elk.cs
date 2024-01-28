@@ -19,6 +19,8 @@ public class Elk : AbstractAnimal {
     [PropertyDescription(Name = "Longitude")]
     public override double Longitude { get; set; }
 
+    protected string ElkType;
+
     #endregion
     
     #region constants

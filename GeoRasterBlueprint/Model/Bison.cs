@@ -19,6 +19,8 @@ public class Bison : AbstractAnimal {
     [PropertyDescription(Name = "Longitude")]
     public override double Longitude { get; set; }
 
+    protected string BisonType;
+        
     #endregion
     #region Constants
     private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
