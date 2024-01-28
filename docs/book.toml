@@ -4,3 +4,7 @@ language = "en"
 multilingual = false
 src = "src"
 title = "Elk Island National Park Simmulation"
+
+[output.html]
+no-section-label = true # no numbers in front of sections
+default-theme = "light"

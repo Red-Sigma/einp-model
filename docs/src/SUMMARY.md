@@ -1,12 +1,11 @@
 # Summary
 
 - [Introduction](./introduction.md)
-- [Installation](./installation.md)
-- [Configuration](./configuration.md)
 - [Running & Output](./running.md)
+- [Model Structure and Resources](./model_structure.md)
 - [Data sources](./data_sources.md)
 - [Analysis](./analysis.md)
 - [Visualization]()
 
 ---
-[Interimpresentations]()
+[Interim presentations](./presentations.md)
