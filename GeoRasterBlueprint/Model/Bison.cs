@@ -26,7 +26,7 @@ public class Bison : AbstractAnimal {
         //food per day (kg) / 16 (hours)
         { AnimalLifePeriod.Calf, 0.56 }, //9kg per day
         { AnimalLifePeriod.Adolescent, 1.81 }, //20-29 kg per day
-        { AnimalLifePeriod.Adult, 3.75 } //60 kg per day, 113 liter
+        { AnimalLifePeriod.Adult, 3.75 } //60 kg per day
     };
     
     private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
@@ -36,9 +36,25 @@ public class Bison : AbstractAnimal {
             { AnimalLifePeriod.Adolescent, 2.29 }, //daily water consumption 55.0 =  29 / 60 * 113, all divided by 24
             { AnimalLifePeriod.Adult, 4.7} //daily water consumption 113, divided by 24
         };
+    
+    [PropertyDescription]
+    public static double DailyFoodAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyFoodCalf { get; set; } 
+    [PropertyDescription]
+    public static double DailyFoodAdolescent { get; set; }
+    
+    //total need of water per day in liters   
+    [PropertyDescription]
+    public static double DailyWaterAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterCalf { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterAdolescent { get; set; }
     #endregion
     
     public override void Tick() { 
+        
         if (!IsAlive) return;
         _hoursLived++;
         if (_hoursLived == 300)

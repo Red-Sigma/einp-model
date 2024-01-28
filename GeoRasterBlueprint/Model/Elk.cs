@@ -39,8 +39,24 @@ public class Elk : AbstractAnimal {
             { AnimalLifePeriod.Adolescent, 1.21 },  //   daily water consumption 29l, all divided by 24
             { AnimalLifePeriod.Adult, 2.5}          //   daily water consumption 60l, divided by 24
         };  
+    
+    [PropertyDescription]
+    public static double DailyFoodAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyFoodCalf { get; set; } 
+    [PropertyDescription]
+    public static double DailyFoodAdolescent { get; set; }
+    
+    //total need of water per day in liters   
+    [PropertyDescription]
+    public static double DailyWaterAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterCalf { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterAdolescent { get; set; }
     #endregion
     public override void Tick() {
+        
         if (!IsAlive) return;
         _hoursLived++;
         if (_hoursLived == 300)

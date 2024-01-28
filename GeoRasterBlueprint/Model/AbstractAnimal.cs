@@ -43,7 +43,7 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public const double DehydrationRate = 6.0;
     public const double StarvationRate = 4.0;
     public const int MaxAge = 25;
-
+    
     public void Init(LandscapeLayer layer) {
         LandscapeLayer = layer;
         

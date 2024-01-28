@@ -23,24 +23,41 @@ public class Moose : AbstractAnimal {
 
     #region Constants
     //TODO use real moose data
-    private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
+    private static readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
     {
-        //food per day (kg) / 16 (hours)
-        { AnimalLifePeriod.Calf, 0.25 },        //4 kg per day
-        { AnimalLifePeriod.Adolescent, 0.81 },  //13 kg per day
-        { AnimalLifePeriod.Adult, 1.68 }        //27 kg per day
+        //food per day (kg) / 16 (hours) adjusted to maxSatiety = 100
+        { AnimalLifePeriod.Calf, 0.92 },        //4 kg per day
+        { AnimalLifePeriod.Adolescent, 3.0 },  //13 kg per day
+        { AnimalLifePeriod.Adult, 6.22 }        //27 kg per day
     };
     
-    private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
-        new()
+    private static readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
+        new()   
         {   
-            //total daily water consumption / 24
-            { AnimalLifePeriod.Calf, 3.29},         // daily water consumption 79  
-            { AnimalLifePeriod.Adolescent, 10.75 },  // daily water consumption 258
-            { AnimalLifePeriod.Adult, 22.0}          // daily water consumption 529, 
+            //total daily water consumption / 24 adjusted to maxHydration = 100
+            { AnimalLifePeriod.Calf, 0.6},         // daily water consumption 79  
+            { AnimalLifePeriod.Adolescent, 2.03 },  // daily water consumption 258
+            { AnimalLifePeriod.Adult, 4.19}          // daily water consumption 529, 
         };
+    
+    //total need of food per day in kilogramms
+    [PropertyDescription]
+    public static double DailyFoodAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyFoodCalf { get; set; } 
+    [PropertyDescription]
+    public static double DailyFoodAdolescent { get; set; }
+    
+    //total need of water per day in liters   
+    [PropertyDescription]
+    public static double DailyWaterAdult { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterCalf { get; set; }
+    [PropertyDescription]
+    public static double DailyWaterAdolescent { get; set; }
     #endregion
     public override void Tick() {
+       
         if (!IsAlive) return;
         _hoursLived++;
         if (_hoursLived == 300)
