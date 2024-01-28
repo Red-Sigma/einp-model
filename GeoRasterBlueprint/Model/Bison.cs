@@ -22,10 +22,15 @@ public class Bison : AbstractAnimal {
     #endregion
     
     #region Constants
-    private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
+    private readonly Dictionary<AnimalLifePeriod, double> _starvationRate = new()
     {
-        //value adjusted to maxSatiety = 100
-        { AnimalLifePeriod.Calf, MaxSatiety * DailyFoodAdult / 16 / DailyFoodAdult }, 
+        /*
+         * DailyFood / 16 is the gross starvation rate
+         * but MaxSatiety = 100 != total food need per day
+         * so the rate has to be adjusted
+         * Total food need per day : 100 = (Total food need per day / 24) : adjusted rate
+         */
+        { AnimalLifePeriod.Calf, MaxSatiety * DailyFoodCalf / 16 / DailyFoodAdult }, 
         { AnimalLifePeriod.Adolescent, MaxSatiety * DailyFoodAdolescent / 16 / DailyFoodAdult }, 
         { AnimalLifePeriod.Adult, MaxSatiety * DailyFoodAdult / 16 / DailyFoodAdult }  
     };
@@ -33,7 +38,12 @@ public class Bison : AbstractAnimal {
     private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
         new()
         {
-            // value adjusted to maxHydration = 100
+            /*
+             * DailyWater / 24 is the gross starvation rate
+             * but MaxHydration = 100 != total food need per day
+             * so the rate has to be adjusted
+             * Total water need per day : 100 = (Total water need per day / 24) : adjusted rate
+             */
             { AnimalLifePeriod.Calf, MaxHydration * DailyWaterCalf / 24 / DailyWaterAdult },
             { AnimalLifePeriod.Adolescent, MaxHydration * DailyWaterAdolescent / 24 / DailyWaterAdult}, 
             { AnimalLifePeriod.Adult, MaxHydration * DailyWaterAdult / 24 / DailyWaterAdult}
@@ -88,12 +98,12 @@ public class Bison : AbstractAnimal {
         
 
         if (currentHour is >= 21 and <= 23 || currentHour is >= 0 and <= 4 ) {   
-            BurnSatiety(_satietyIntakeHourly[_LifePeriod] / 4); //less food is consumed while sleeping
+            BurnSatiety(_starvationRate[_LifePeriod] / 4); //less food is consumed while sleeping
             Dehydrate(_dehydrationRate[_LifePeriod]/2);           //less water is consumed at night
         }
         else
         {
-            BurnSatiety(_satietyIntakeHourly[_LifePeriod]);
+            BurnSatiety(_starvationRate[_LifePeriod]);
             Dehydrate(_dehydrationRate[_LifePeriod]);
         }
     }
