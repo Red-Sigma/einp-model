@@ -1,34 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using GeoRasterBlueprint.Util;
 using Mars.Common;
+using Mars.Components.Layers;
 using Mars.Interfaces.Agents;
 using Mars.Interfaces.Environments;
 using NetTopologySuite.Utilities;
 using Position = Mars.Interfaces.Environments.Position;
+using Mars.Interfaces.Annotations;
 
 namespace GeoRasterBlueprint.Model;
 
 public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
+
+    [ActiveConstructor]
+    public AbstractAnimal() {
+    }
+    
+    [ActiveConstructor]
+    public AbstractAnimal(
+        LandscapeLayer landscapeLayer, 
+        Perimeter perimeter,
+        VegetationLayer vegetationLayer,
+        WaterLayer waterLayer,
+        Guid id,
+        AnimalType animalType,
+        bool isLeading,
+        int herdId,
+        double latitude, 
+        double longitude) { 
+        Position = Position.CreateGeoPosition(longitude, latitude);
+        _landscapeLayer = landscapeLayer;
+        _perimeter = perimeter;
+        _vegetationLayer = vegetationLayer;
+        _waterLayer = waterLayer;
+        _animalType = animalType;
+        ID = id;
+        //_isLeading = isLeading;
+        //_herdId = herdId;
+    }
     
     public Guid ID { get; set; }
     public abstract Position Position { get; set; }
     public abstract Position Target { get; set; }
     public double Bearing = 222.0;
     public const double Distance = 5000.0;
-    public LandscapeLayer LandscapeLayer { get; set; }
+    public LandscapeLayer _landscapeLayer { get; set; }
     public abstract double Latitude { get; set; }
     public abstract double Longitude { get; set; }
-    public Perimeter Perimeter { get; set; }
+    public Perimeter _perimeter { get; set; }
     public abstract double Hydration { get; set; }
     public abstract double Satiety { get; set; }
     public VectorWaterLayer VectorWaterLayer { get; set; }
     public RasterWaterLayer RasterWaterLayer { get; set; }
-    public VegetationLayer VegetationLayer { get; set; }
+    public VegetationLayer _vegetationLayer { get; set; }
     
     public int _hoursLived;
     public AnimalType _animalType;
     public readonly int[] _reproductionYears = {2, 15};
     public bool _pregnant;
+    public int _pregnancyDuration;
     public int _chanceOfDeath;
     public int Age { get; set; }
     public AnimalLifePeriod _LifePeriod;
@@ -47,11 +79,12 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
 
     
     public void Init(LandscapeLayer layer) {
-        LandscapeLayer = layer;
+        _landscapeLayer = layer;
 
         var spawnPosition = new Position(Longitude, Latitude);
+        _landscapeLayer = layer;
         
-        if (Perimeter.IsPointInside(spawnPosition) && !RasterWaterLayer.IsPointInside(spawnPosition)) {
+        if (_perimeter.IsPointInside(spawnPosition) && !RasterWaterLayer.IsPointInside(spawnPosition)) {
             Position = Position.CreateGeoPosition(Longitude, Latitude);
         } else {
             throw new Exception($"Start point is not valid. Lon: {Longitude}, Lat: {Latitude}");
@@ -121,10 +154,10 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
                 var targetX = spot.Node.NodePosition.X;
                 var targetY = spot.Node.NodePosition.Y;
 
-                var targetLon = VegetationLayer.LowerLeft.X +
-                                targetX * VegetationLayer.CellWidth;
-                var targetLat = VegetationLayer.LowerLeft.Y +
-                                targetY * VegetationLayer.CellHeight;
+                var targetLon = _vegetationLayer.LowerLeft.X +
+                                targetX * _vegetationLayer.CellWidth;
+                var targetLat = _vegetationLayer.LowerLeft.Y +
+                                targetY * _vegetationLayer.CellHeight;
 
                 Target = new Position(targetLon, targetLat);
 

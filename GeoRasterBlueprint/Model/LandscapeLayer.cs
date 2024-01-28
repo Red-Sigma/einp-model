@@ -24,6 +24,9 @@ public class LandscapeLayer : AbstractLayer {
     [PropertyDescription(Name = "Perimeter")]
     public Perimeter Fence { get; set; }
 
+    private RegisterAgent _registerAgent;
+    private UnregisterAgent _unregisterAgent;
+
     #endregion
     
     /// <summary>
@@ -38,6 +41,8 @@ public class LandscapeLayer : AbstractLayer {
     public override bool InitLayer(LayerInitData layerInitData, RegisterAgent registerAgentHandle,
         UnregisterAgent unregisterAgentHandle) {
         base.InitLayer(layerInitData, registerAgentHandle, unregisterAgentHandle);
+        _registerAgent = registerAgentHandle;
+        _unregisterAgent = unregisterAgentHandle;
 
         // Calculate and expand extent
         var baseExtent = new Envelope(Fence.Extent.ToEnvelope());
@@ -53,5 +58,31 @@ public class LandscapeLayer : AbstractLayer {
         
         return Bisons.Count + Moose.Count + Elks.Count > 0;
     }
+
+    public void SpawnBison(LandscapeLayer landscapeLayer, Perimeter perimeter, 
+        VegetationLayer vegetationLayer, WaterLayer waterLayer, AnimalType animalType, 
+        bool isLeading, int herdId, double latitude, double longitude) {
+        var newBison = new Bison(landscapeLayer, perimeter, vegetationLayer, waterLayer, 
+            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude);
+        Bisons.Add(newBison);
+        _registerAgent(landscapeLayer, newBison);
+    }
     
+    public void SpawnElk(LandscapeLayer landscapeLayer, Perimeter perimeter, 
+        VegetationLayer vegetationLayer, WaterLayer waterLayer, AnimalType animalType, 
+        bool isLeading, int herdId, double latitude, double longitude) {
+        var newElk = new Elk(landscapeLayer, perimeter, vegetationLayer, waterLayer, 
+            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude);
+        Elks.Add(newElk);
+        _registerAgent(landscapeLayer, newElk);
+    }
+    
+    public void SpawnMoose(LandscapeLayer landscapeLayer, Perimeter perimeter, 
+        VegetationLayer vegetationLayer, WaterLayer waterLayer, AnimalType animalType, 
+        bool isLeading, int herdId, double latitude, double longitude) {
+        var newMoose = new Moose(landscapeLayer, perimeter, vegetationLayer, waterLayer, 
+            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude);
+        Moose.Add(newMoose);
+        _registerAgent(landscapeLayer, newMoose);
+    }
 }

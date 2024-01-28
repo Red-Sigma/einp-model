@@ -8,6 +8,34 @@ namespace GeoRasterBlueprint.Model;
 
 public class Moose : AbstractAnimal {
     
+    [ActiveConstructor]
+    public Moose() {
+    }
+    
+    [ActiveConstructor]
+    public Moose(
+        LandscapeLayer landscapeLayer, 
+        Perimeter perimeter,
+        VegetationLayer vegetationLayer,
+        WaterLayer waterLayer,
+        Guid id,
+        AnimalType animalType,
+        bool isLeading,
+        int herdId,
+        double latitude, 
+        double longitude) : 
+        base(landscapeLayer, 
+            perimeter,
+            vegetationLayer,
+            waterLayer,
+            id,
+            animalType,
+            isLeading,
+            herdId,
+            latitude, 
+            longitude) { 
+    }
+    
     #region Properties and Fields
     
     public override double Hydration { get; set; } = MaxHydration;
@@ -18,6 +46,9 @@ public class Moose : AbstractAnimal {
     public override double Latitude { get; set; }
     [PropertyDescription(Name = "Longitude")]
     public override double Longitude { get; set; }
+    //Chance for a female animal to become pregnant per year
+    public int _chanceForPregnancy = 10;
+
 
     protected string MooseType;
     #endregion
@@ -70,6 +101,16 @@ public class Moose : AbstractAnimal {
        
         if (!IsAlive) return;
         _hoursLived++;
+        if (_hoursLived % 25 == 0 && _pregnant) {
+            if (_pregnancyDuration < 6) {
+                _pregnancyDuration++;
+            }
+            else {
+                _pregnancyDuration = 0;
+                _landscapeLayer.SpawnMoose(_landscapeLayer, _perimeter, _vegetationLayer, _waterLayer, 
+                    AnimalType.MooseCalf, false, 0101, Latitude, Longitude);
+            }
+        }
         if (_hoursLived == 300)
         {
             YearlyRoutine();
@@ -92,8 +133,8 @@ public class Moose : AbstractAnimal {
     protected override void UpdateState()
     {
         int currentHour;
-        if (LandscapeLayer.Context.CurrentTimePoint != null)
-            currentHour = LandscapeLayer.Context.CurrentTimePoint.Value.Hour;
+        if (_landscapeLayer.Context.CurrentTimePoint != null)
+            currentHour = _landscapeLayer.Context.CurrentTimePoint.Value.Hour;
         else
             throw new NullReferenceException();
         
@@ -139,9 +180,11 @@ public class Moose : AbstractAnimal {
         //check for possible reproduction
         if (!_reproductionYears.Contains(Age)) return;
 
-        if (!_animalType.Equals(AnimalType.MooseBull)) return;
+        if (!_animalType.Equals(AnimalType.MooseCow)) return;
 
-        _pregnant = true;
+        if (_random.Next(100) < _chanceForPregnancy-1) {
+            _pregnant = true;
+        }
     }
     
     public override AnimalLifePeriod GetAnimalLifePeriodFromAge(int age)
