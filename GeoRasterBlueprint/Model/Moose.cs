@@ -26,17 +26,18 @@ public class Moose : AbstractAnimal {
     private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
     {
         //food per day (kg) / 16 (hours)
-        { AnimalLifePeriod.Calf, 0.56 }, //9kg per day
-        { AnimalLifePeriod.Adolescent, 1.81 }, //20-29 kg per day
-        { AnimalLifePeriod.Adult, 3.75 } //60 kg per day, 113 liter
+        { AnimalLifePeriod.Calf, 0.25 },        //4 kg per day
+        { AnimalLifePeriod.Adolescent, 0.81 },  //13 kg per day
+        { AnimalLifePeriod.Adult, 1.68 }        //27 kg per day
     };
     
     private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
         new()
-        {
-            { AnimalLifePeriod.Calf, 0.7 }, // daily water consumption 17.0 = 9 / 60 *  113, divided by 24
-            { AnimalLifePeriod.Adolescent, 2.29 }, //daily water consumption 55.0 =  29 / 60 * 113, all divided by 24
-            { AnimalLifePeriod.Adult, 4.7} //daily water consumption 113, divided by 24
+        {   
+            //total daily water consumption / 24
+            { AnimalLifePeriod.Calf, 3.29},         // daily water consumption 79  
+            { AnimalLifePeriod.Adolescent, 10.75 },  // daily water consumption 258
+            { AnimalLifePeriod.Adult, 22.0}          // daily water consumption 529, 
         };
     #endregion
     public override void Tick() {

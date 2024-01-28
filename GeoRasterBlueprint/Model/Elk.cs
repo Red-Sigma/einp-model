@@ -27,18 +27,18 @@ public class Elk : AbstractAnimal {
     private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
     {
         //food per day (kg) / 16 (hours)
-        { AnimalLifePeriod.Calf, 0.56 }, //9kg per day
-        { AnimalLifePeriod.Adolescent, 1.81 }, //20-29 kg per day
-        { AnimalLifePeriod.Adult, 3.75 } //60 kg per day, 113 liter
+        { AnimalLifePeriod.Calf, 0.13 },        //      2.0 per day
+        { AnimalLifePeriod.Adolescent, 0.26 },  //      4.2 kg per day
+        { AnimalLifePeriod.Adult, 0.57}        //      9.1 kg per day 
     };
     
     private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
         new()
         {
-            { AnimalLifePeriod.Calf, 0.7 }, // daily water consumption 17.0 = 9 / 60 *  113, divided by 24
-            { AnimalLifePeriod.Adolescent, 2.29 }, //daily water consumption 55.0 =  29 / 60 * 113, all divided by 24
-            { AnimalLifePeriod.Adult, 4.7} //daily water consumption 113, divided by 24
-        };
+            { AnimalLifePeriod.Calf, 0.38 },        //   daily water consumption 9l divided by 24
+            { AnimalLifePeriod.Adolescent, 1.21 },  //   daily water consumption 29l, all divided by 24
+            { AnimalLifePeriod.Adult, 2.5}          //   daily water consumption 60l, divided by 24
+        };  
     #endregion
     public override void Tick() {
         if (!IsAlive) return;
