@@ -23,23 +23,23 @@ public class Elk : AbstractAnimal {
     
     #region constants
     
-    //TODO use real Elk data
     private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
     {
-        //food per day (kg) / 16 (hours)
-        { AnimalLifePeriod.Calf, 0.13 },        //      2.0 per day
-        { AnimalLifePeriod.Adolescent, 0.26 },  //      4.2 kg per day
-        { AnimalLifePeriod.Adult, 0.57}        //      9.1 kg per day 
+        //value adjusted to maxSatiety = 100
+        { AnimalLifePeriod.Calf, MaxSatiety * DailyFoodAdult / 16 / DailyFoodAdult }, 
+        { AnimalLifePeriod.Adolescent, MaxSatiety * DailyFoodAdolescent / 16 / DailyFoodAdult }, 
+        { AnimalLifePeriod.Adult, MaxSatiety * DailyFoodAdult / 16 / DailyFoodAdult }  
     };
     
     private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
         new()
         {
-            { AnimalLifePeriod.Calf, 0.38 },        //   daily water consumption 9l divided by 24
-            { AnimalLifePeriod.Adolescent, 1.21 },  //   daily water consumption 29l, all divided by 24
-            { AnimalLifePeriod.Adult, 2.5}          //   daily water consumption 60l, divided by 24
-        };  
-    
+            // value adjusted to maxHydration = 100
+            { AnimalLifePeriod.Calf, MaxHydration * DailyWaterCalf / 24 / DailyWaterAdult },
+            { AnimalLifePeriod.Adolescent, MaxHydration * DailyWaterAdolescent / 24 / DailyWaterAdult}, 
+            { AnimalLifePeriod.Adult, MaxHydration * DailyWaterAdult / 24 / DailyWaterAdult}
+        };
+
     [PropertyDescription]
     public static double DailyFoodAdult { get; set; }
     [PropertyDescription]

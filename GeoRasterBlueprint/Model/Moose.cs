@@ -22,24 +22,23 @@ public class Moose : AbstractAnimal {
     #endregion
 
     #region Constants
-    //TODO use real moose data
-    private static readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
+    private readonly Dictionary<AnimalLifePeriod, double> _satietyIntakeHourly = new()
     {
-        //food per day (kg) / 16 (hours) adjusted to maxSatiety = 100
-        { AnimalLifePeriod.Calf, 0.92 },        //4 kg per day
-        { AnimalLifePeriod.Adolescent, 3.0 },  //13 kg per day
-        { AnimalLifePeriod.Adult, 6.22 }        //27 kg per day
+        //value adjusted to maxSatiety = 100
+        { AnimalLifePeriod.Calf, MaxSatiety * DailyFoodAdult / 16 / DailyFoodAdult }, 
+        { AnimalLifePeriod.Adolescent, MaxSatiety * DailyFoodAdolescent / 16 / DailyFoodAdult }, 
+        { AnimalLifePeriod.Adult, MaxSatiety * DailyFoodAdult / 16 / DailyFoodAdult }  
     };
     
-    private static readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
-        new()   
-        {   
-            //total daily water consumption / 24 adjusted to maxHydration = 100
-            { AnimalLifePeriod.Calf, 0.6},         // daily water consumption 79  
-            { AnimalLifePeriod.Adolescent, 2.03 },  // daily water consumption 258
-            { AnimalLifePeriod.Adult, 4.19}          // daily water consumption 529, 
+    private readonly Dictionary<AnimalLifePeriod, double> _dehydrationRate =
+        new()
+        {
+            // value adjusted to maxHydration = 100
+            { AnimalLifePeriod.Calf, MaxHydration * DailyWaterCalf / 24 / DailyWaterAdult },
+            { AnimalLifePeriod.Adolescent, MaxHydration * DailyWaterAdolescent / 24 / DailyWaterAdult}, 
+            { AnimalLifePeriod.Adult, MaxHydration * DailyWaterAdult / 24 / DailyWaterAdult}
         };
-    
+
     //total need of food per day in kilogramms
     [PropertyDescription]
     public static double DailyFoodAdult { get; set; }
