@@ -37,8 +37,8 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
         _waterLayer = waterLayer;
         _animalType = animalType;
         ID = id;
-        //_isLeading = isLeading;
-        //_herdId = herdId;
+        _isLeading = isLeading;
+        _herdId = herdId;
     }
     
     public Guid ID { get; set; }
@@ -67,8 +67,10 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public MattersOfDeath MatterOfDeath { get; private set; }
     public bool IsAlive { get; set; } = true;
 
-    protected bool isLeading { get; }
-    protected int herdId { get; } 
+    [PropertyDescription (Name="isLeading")]
+    protected bool _isLeading { get; }
+    [PropertyDescription (Name="_herdId")]
+    protected int _herdId { get; }
     
     public static Random _random = new ();
     private const int RandomWalkMaxDistanceInM = 500;
@@ -203,7 +205,7 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     {
         MatterOfDeath = mannerOfDeath;
         IsAlive = false;
-        //add removal of animal
+        _landscapeLayer.removeAnimal(_landscapeLayer, this);
     }
     
 }

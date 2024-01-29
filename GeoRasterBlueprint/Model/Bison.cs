@@ -101,7 +101,6 @@ public class Bison : AbstractAnimal {
     
     public override void Tick() { 
         
-        if (!IsAlive) return;
         _hoursLived++;
         if (_hoursLived % 25 == 0 && _pregnant) {
             if (_pregnancyDuration < 8) {
@@ -110,7 +109,7 @@ public class Bison : AbstractAnimal {
             else {
                 _pregnancyDuration = 0;
                 _landscapeLayer.SpawnBison(_landscapeLayer, _perimeter, _vegetationLayer, _waterLayer, 
-                    AnimalType.BisonCalf, false, 0101, Latitude, Longitude);
+                    AnimalType.BisonCalf, false, _herdId, Latitude, Longitude);
             }
         }
         if (_hoursLived == 300)
@@ -178,11 +177,11 @@ public class Bison : AbstractAnimal {
         }
 
         //check for possible reproduction
-        if (!_reproductionYears.Contains(Age)) return;
+        if (!(Age >= _reproductionYears[0] && Age <= _reproductionYears[1])) return;
 
         if (!_animalType.Equals(AnimalType.BisonCow)) return;
 
-        if (_random.Next(100) < _chanceForPregnancy-1) {
+        if (_LifePeriod == AnimalLifePeriod.Adult && _random.Next(100) < _chanceForPregnancy-1) {
             _pregnant = true;
         }
     }

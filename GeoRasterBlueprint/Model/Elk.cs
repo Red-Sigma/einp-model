@@ -48,8 +48,8 @@ public class Elk : AbstractAnimal {
     public override double Longitude { get; set; }
     //Chance for a female animal to become pregnant per year
     public int _chanceForPregnancy = 10;
-
-
+    
+    
     protected string ElkType;
 
     #endregion
@@ -109,7 +109,7 @@ public class Elk : AbstractAnimal {
             else {
                 _pregnancyDuration = 0;
                 _landscapeLayer.SpawnElk(_landscapeLayer, _perimeter, _vegetationLayer, _waterLayer, 
-                    AnimalType.ElkCalf, false, 0101, Latitude, Longitude);
+                    AnimalType.ElkCalf, false, _herdId, Latitude, Longitude);
             }
         }
         if (_hoursLived == 300)
@@ -179,11 +179,11 @@ public class Elk : AbstractAnimal {
         }
 
         //check for possible reproduction
-        if (!_reproductionYears.Contains(Age)) return;
+        if (!(Age >= _reproductionYears[0] && Age <= _reproductionYears[1])) return;
 
         if (!_animalType.Equals(AnimalType.ElkCow)) return;
 
-        if (_random.Next(100) < _chanceForPregnancy-1) {
+        if (_LifePeriod == AnimalLifePeriod.Adult && _random.Next(100) < _chanceForPregnancy-1) {
             _pregnant = true;
         }
     }

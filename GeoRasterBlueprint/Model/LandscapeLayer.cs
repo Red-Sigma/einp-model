@@ -85,4 +85,20 @@ public class LandscapeLayer : AbstractLayer {
         Moose.Add(newMoose);
         _registerAgent(landscapeLayer, newMoose);
     }
+
+    public void removeAnimal(LandscapeLayer landscapeLayer, AbstractAnimal animal) {
+        _unregisterAgent(landscapeLayer, animal);
+        if (animal._animalType == AnimalType.BisonBull || animal._animalType == AnimalType.BisonCalf ||
+            animal._animalType == AnimalType.BisonCow || animal._animalType == AnimalType.BisonCow) {
+            Bisons.Remove((Bison)animal);
+        } 
+        else if (animal._animalType == AnimalType.ElkCalf || animal._animalType == AnimalType.ElkCow ||
+              animal._animalType == AnimalType.ElkBull || animal._animalType == AnimalType.ElkNewborn) {
+            Elks.Remove((Elk)animal);
+        }
+        else if (animal._animalType == AnimalType.MooseCalf || animal._animalType == AnimalType.MooseCow ||
+                 animal._animalType == AnimalType.MooseBull || animal._animalType == AnimalType.MooseNewborn) {
+            Moose.Remove((Moose)animal);
+        }
+    }
 }
