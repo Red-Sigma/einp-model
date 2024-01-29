@@ -59,10 +59,6 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     }
     
     public abstract void Tick();
-
-    protected Position Move(AbstractAnimal animal, double bearing, double distance) {
-        return LandscapeLayer.Environment.MoveTowards(animal, bearing, distance);
-    }
     
     protected void DoRandomWalk(int numOfAttempts) {
         Assert.IsTrue(Perimeter.IsPointInside(Position) && !RasterWaterLayer.IsPointInside(Position));
