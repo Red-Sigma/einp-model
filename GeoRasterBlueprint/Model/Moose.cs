@@ -77,12 +77,10 @@ public class Moose : AbstractAnimal {
         if (!IsAlive) return;
        
         if (Satiety < 40) {
-            SearchForFood();
+            LookForFoodAndEat();
         }
         else if (Hydration < 40) {
-            MoveToWaterSource();
-            // currently buggy because we walk into water
-            Hydration += 20;
+            LookForWaterAndDrink();
         }
         else {
             DoRandomWalk(10);
