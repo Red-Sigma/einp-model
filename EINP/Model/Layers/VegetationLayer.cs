@@ -2,7 +2,7 @@
 using Mars.Components.Layers;
 using Position = Mars.Interfaces.Environments.Position;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model;
 
 /// <summary>
 ///     This raster layer provides information about biomass of animals etc.

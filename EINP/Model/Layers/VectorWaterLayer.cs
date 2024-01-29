@@ -2,7 +2,7 @@ using Mars.Components.Layers;
 using NetTopologySuite.Geometries;
 using Position = Mars.Interfaces.Environments.Position;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model;
 
 /// <summary>
 ///     Represents water spots in the Elk Island National Park.

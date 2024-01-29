@@ -1,4 +1,4 @@
-﻿namespace GeoRasterBlueprint.Model;
+﻿namespace EINP.Model;
 
 public enum AnimalLifePeriod
 {

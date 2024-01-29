@@ -3,7 +3,7 @@ using Mars.Components.Layers;
 using NetTopologySuite.Geometries;
 using Position = Mars.Interfaces.Environments.Position;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model;
 
 /// <summary>
 ///     A vector layer that ingests a .geojson vector file with the walkable area by the agents.

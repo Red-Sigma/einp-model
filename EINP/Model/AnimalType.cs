@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GeoRasterBlueprint.Model; 
+namespace EINP.Model; 
 
 public enum AnimalType {
     BisonCow,

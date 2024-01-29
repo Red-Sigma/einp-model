@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model;
 
 public class AbstractHerd<T> where T : AbstractAnimal
 {
