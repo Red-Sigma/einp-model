@@ -9,6 +9,7 @@ using Mars.Interfaces.Data;
 using Mars.Interfaces.Environments;
 using Mars.Interfaces.Layers;
 using NetTopologySuite.Geometries;
+using Position = Mars.Interfaces.Environments.Position;
 
 namespace GeoRasterBlueprint.Model;
 
@@ -60,28 +61,28 @@ public class LandscapeLayer : AbstractLayer {
     }
 
     public void SpawnBison(LandscapeLayer landscapeLayer, Perimeter perimeter, 
-        VegetationLayer vegetationLayer, WaterLayer waterLayer, AnimalType animalType, 
-        bool isLeading, int herdId, double latitude, double longitude) {
-        var newBison = new Bison(landscapeLayer, perimeter, vegetationLayer, waterLayer, 
-            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude);
+        VegetationLayer vegetationLayer, VectorWaterLayer waterLayer, RasterWaterLayer rasterWaterLayer, AnimalType animalType, 
+        bool isLeading, int herdId, double latitude, double longitude, Position position) {
+        var newBison = new Bison(landscapeLayer, perimeter, vegetationLayer, waterLayer, rasterWaterLayer,
+            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude, position);
         Bisons.Add(newBison);
         _registerAgent(landscapeLayer, newBison);
     }
     
     public void SpawnElk(LandscapeLayer landscapeLayer, Perimeter perimeter, 
-        VegetationLayer vegetationLayer, WaterLayer waterLayer, AnimalType animalType, 
-        bool isLeading, int herdId, double latitude, double longitude) {
-        var newElk = new Elk(landscapeLayer, perimeter, vegetationLayer, waterLayer, 
-            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude);
+        VegetationLayer vegetationLayer, VectorWaterLayer waterLayer, RasterWaterLayer rasterWaterLayer, AnimalType animalType, 
+        bool isLeading, int herdId, double latitude, double longitude, Position position) {
+        var newElk = new Elk(landscapeLayer, perimeter, vegetationLayer, waterLayer, rasterWaterLayer,
+            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude, position);
         Elks.Add(newElk);
         _registerAgent(landscapeLayer, newElk);
     }
     
     public void SpawnMoose(LandscapeLayer landscapeLayer, Perimeter perimeter, 
-        VegetationLayer vegetationLayer, WaterLayer waterLayer, AnimalType animalType, 
-        bool isLeading, int herdId, double latitude, double longitude) {
-        var newMoose = new Moose(landscapeLayer, perimeter, vegetationLayer, waterLayer, 
-            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude);
+        VegetationLayer vegetationLayer, VectorWaterLayer waterLayer, RasterWaterLayer rasterWaterLayer, AnimalType animalType, 
+        bool isLeading, int herdId, double latitude, double longitude, Position position) {
+        var newMoose = new Moose(landscapeLayer, perimeter, vegetationLayer, waterLayer, rasterWaterLayer,
+            Guid.NewGuid(), animalType, isLeading, herdId, latitude, longitude, position);
         Moose.Add(newMoose);
         _registerAgent(landscapeLayer, newMoose);
     }
