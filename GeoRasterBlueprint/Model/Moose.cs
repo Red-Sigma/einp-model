@@ -102,7 +102,7 @@ public class Moose : AbstractAnimal {
     public static double DailyWaterAdolescent { get; set; }
     #endregion
     public override void Tick() {
-       
+        
         _hoursLived++;
         if (_hoursLived % 1 == 0 && _pregnant) {
             if (_pregnancyDuration < 6) {
