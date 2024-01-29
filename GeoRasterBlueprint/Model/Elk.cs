@@ -8,6 +8,38 @@ namespace GeoRasterBlueprint.Model;
 
 public class Elk : AbstractAnimal {
     
+    [ActiveConstructor]
+    public Elk() {
+    }
+    
+    [ActiveConstructor]
+    public Elk(
+        LandscapeLayer landscapeLayer, 
+        Perimeter perimeter,
+        VegetationLayer vegetationLayer,
+        VectorWaterLayer waterLayer,
+        RasterWaterLayer rasterWaterLayer,
+        Guid id,
+        AnimalType animalType,
+        bool isLeading,
+        int herdId,
+        double latitude, 
+        double longitude,
+        Position position) : 
+        base(landscapeLayer, 
+            perimeter,
+            vegetationLayer,
+            waterLayer,
+            rasterWaterLayer,
+            id,
+            animalType,
+            isLeading,
+            herdId,
+            latitude, 
+            longitude,
+            position) { 
+    }
+    
     #region Properties and Fields
     
     public override double Hydration { get; set; } = MaxHydration;
@@ -18,7 +50,10 @@ public class Elk : AbstractAnimal {
     public override double Latitude { get; set; }
     [PropertyDescription(Name = "Longitude")]
     public override double Longitude { get; set; }
-
+    //Chance for a female animal to become pregnant per year
+    public int ChanceForPregnancy = 10;
+    
+    
     protected string ElkType;
 
     #endregion
@@ -69,9 +104,18 @@ public class Elk : AbstractAnimal {
     #endregion
     public override void Tick() {
         
-        if (!IsAlive) return;
         _hoursLived++;
-        if (_hoursLived == 300)
+        if (_hoursLived % 1 == 0 && _pregnant) {
+            if (_pregnancyDuration < 8) {
+                _pregnancyDuration++;
+            }
+            else {
+                _pregnancyDuration = 0;
+                _landscapeLayer.SpawnElk(_landscapeLayer, _perimeter, _vegetationLayer, _vectorWaterLayer, _rasterWaterLayer,
+                    AnimalType.ElkCalf, false, _herdId, Latitude, Longitude, Position);
+            }
+        }
+        if (_hoursLived == 2)
         {
             YearlyRoutine();
         }
@@ -93,8 +137,8 @@ public class Elk : AbstractAnimal {
     protected override void UpdateState()
     {
         int currentHour;
-        if (LandscapeLayer.Context.CurrentTimePoint != null)
-            currentHour = LandscapeLayer.Context.CurrentTimePoint.Value.Hour;
+        if (_landscapeLayer.Context.CurrentTimePoint != null)
+            currentHour = _landscapeLayer.Context.CurrentTimePoint.Value.Hour;
         else
             throw new NullReferenceException();
         
@@ -138,11 +182,13 @@ public class Elk : AbstractAnimal {
         }
 
         //check for possible reproduction
-        if (!_reproductionYears.Contains(Age)) return;
+        if (!(Age >= _reproductionYears[0] && Age <= _reproductionYears[1])) return;
 
-        if (!_animalType.Equals(AnimalType.ElkBull)) return;
+        if (!_animalType.Equals(AnimalType.ElkCow)) return;
 
-        _pregnant = true;
+        if (_LifePeriod == AnimalLifePeriod.Adult && _random.Next(100) < ChanceForPregnancy-1) {
+            _pregnant = true;
+        }
     }
     
     public override AnimalLifePeriod GetAnimalLifePeriodFromAge(int age)
