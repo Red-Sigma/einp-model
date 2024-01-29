@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using GeoRasterBlueprint.Util;
 using Mars.Common;
-using Mars.Components.Layers;
 using Mars.Interfaces.Agents;
 using Mars.Interfaces.Environments;
+using NetTopologySuite.Utilities;
+using Position = Mars.Interfaces.Environments.Position;
 
 namespace GeoRasterBlueprint.Model;
 
@@ -22,7 +21,8 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     public Perimeter Perimeter { get; set; }
     public abstract double Hydration { get; set; }
     public abstract double Satiety { get; set; }
-    public WaterLayer WaterLayer { get; set; }
+    public VectorWaterLayer VectorWaterLayer { get; set; }
+    public RasterWaterLayer RasterWaterLayer { get; set; }
     public VegetationLayer VegetationLayer { get; set; }
     
     public int _hoursLived;
@@ -48,11 +48,13 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     
     public void Init(LandscapeLayer layer) {
         LandscapeLayer = layer;
+
+        var spawnPosition = new Position(Longitude, Latitude);
         
-        if (LandscapeLayer.Fence.IsPointInside(new Position(Longitude, Latitude))) {
+        if (Perimeter.IsPointInside(spawnPosition) && !RasterWaterLayer.IsPointInside(spawnPosition)) {
             Position = Position.CreateGeoPosition(Longitude, Latitude);
         } else {
-            throw new Exception($"Start point is not inside perimeter. Lon: {Longitude}, Lat: {Latitude}");
+            throw new Exception($"Start point is not valid. Lon: {Longitude}, Lat: {Latitude}");
         }
     }
     
@@ -63,62 +65,65 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     }
     
     protected void DoRandomWalk(int numOfAttempts) {
-        bool walkedSuccessfully = false;
+        Assert.IsTrue(Perimeter.IsPointInside(Position) && !RasterWaterLayer.IsPointInside(Position));
         
-        while (numOfAttempts > 0 && !walkedSuccessfully) {
+        while (numOfAttempts > 0) {
             var randomDistance = _random.Next(RandomWalkMinDistanceInM, RandomWalkMaxDistanceInM);
             var randomDirection = _random.Next(0, 360);
             
-            var targetPosition = Position.GetRelativePosition(randomDirection, randomDistance);
-
-            // removed for being bugged && !WaterLayer.IsIntersectsAny(Position, targetPosition)
-            if (Perimeter.IsPointInside(targetPosition)) {
-                var newCurrentPosition = Move(this, randomDirection, randomDistance);
-                if (newCurrentPosition != null) {
-                    walkedSuccessfully = true;
-                }
+            Target = Position.GetRelativePosition(randomDirection, randomDistance);
+            
+            if (Perimeter.IsPointInside(Target) && !RasterWaterLayer.IsPointInside(Target)) {
+                Position = Target;
+                break;
             }
-
             numOfAttempts--;
         }
+        
+        Assert.IsTrue(Perimeter.IsPointInside(Position) && !RasterWaterLayer.IsPointInside(Position));
     }
     
-    protected void MoveToWaterSource() {
-        int radius = 2000;
-        List<VectorFeature> nearWaterSpots = WaterLayer.Explore(Position.PositionArray, radius).ToList();
-        if (nearWaterSpots.Any()) {
-            var nearest = WaterLayer.Nearest(new []{Position.X, Position.Y});
+    protected void LookForWaterAndDrink() {
+        Assert.IsTrue(Perimeter.IsPointInside(Position) && !RasterWaterLayer.IsPointInside(Position));
+        const int radius = 2000;
+        var nearWaterSpots = VectorWaterLayer.Explore(Position.PositionArray, radius)
+            .ToList();
 
-            var nearestPoints = nearest.VectorStructured.Geometry.Coordinates.ToList();
-            
-            nearestPoints.Sort(new DistanceComparer(Position.X, Position.Y));
-            
-            Target =  new Position(nearestPoints.First().X, nearestPoints.First().Y);
-            
-            Bearing = Position.GetBearing(Target);
+        if (!nearWaterSpots.Any()) return;
+        
+        var nearestWaterSpot = VectorWaterLayer
+            .Nearest(new []{Position.X, Position.Y})
+            .VectorStructured
+            .Geometry
+            .Coordinates
+            .Where(coordinate => Perimeter.IsPointInside(new Position(coordinate.X, coordinate.Y)))
+            .OrderBy(coordinate => Position.DistanceInMTo(coordinate.X, coordinate.Y))
+            .ToList();
 
-            if (Target.DistanceInMTo(Position) < 50) {
+        foreach (var point in nearestWaterSpot) {
+            Target =  new Position(point.X, point.Y);
+            
+            if (Perimeter.IsPointInside(Target) && !RasterWaterLayer.IsPointInside(Target)) {
+                Position = Target;
                 Hydration += 20;
-                Bearing = (Bearing + 45) % 360;
+                break;
             }
-
-            var distanceToTarget = Target.DistanceInMTo(Position);
-            
-            Position = distanceToTarget > Distance
-                ? Move(this, Bearing, Distance)
-                : Move(this, Bearing, distanceToTarget - 10);
-        } else {
-            Console.WriteLine("No water found in {0}m radius.", radius);
         }
+        
+        Assert.IsTrue(Perimeter.IsPointInside(Position) && !RasterWaterLayer.IsPointInside(Position));
     }
 
-    protected void SearchForFood() {
+    protected void LookForFoodAndEat() {
+        Assert.IsTrue(Perimeter.IsPointInside(Position) && !RasterWaterLayer.IsPointInside(Position));
         if (VegetationLayer.IsPointInside(Position)) {
-            var all = VegetationLayer.Explore(Position, 20, 4);
-            var res = all.OrderBy(a => a.Node.Value).Last();
-            if (res.Node?.NodePosition != null) {
-                var targetX = res.Node.NodePosition.X;
-                var targetY = res.Node.NodePosition.Y;
+            var nearVegetationSpots = VegetationLayer.Explore(Position, 20)
+                .OrderByDescending(node => node.Node.Value)
+                .ToList();
+
+            foreach (var spot in nearVegetationSpots) {
+                
+                var targetX = spot.Node.NodePosition.X;
+                var targetY = spot.Node.NodePosition.Y;
 
                 var targetLon = VegetationLayer.LowerLeft.X +
                                 targetX * VegetationLayer.CellWidth;
@@ -127,17 +132,14 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
 
                 Target = new Position(targetLon, targetLat);
 
-                if (Perimeter.IsPointInside(Target)) {
+                if (Perimeter.IsPointInside(Target) && !RasterWaterLayer.IsPointInside(Target)) {
+                    Position = Target;
                     Satiety += 12;
-                    var oldPos = Position;
-                    var distanceToTarget = Target.DistanceInMTo(Position);
-                    Bearing = Position.GetBearing(Target);
-                    Position = distanceToTarget > Distance
-                        ? Move(this, Bearing, Distance)
-                        : Move(this, Bearing, distanceToTarget);
+                    break;
                 }
             }
         }
+        Assert.IsTrue(Perimeter.IsPointInside(Position) && !RasterWaterLayer.IsPointInside(Position));
     }
     
     //every animals has different ways to consume food or hydration

@@ -16,7 +16,8 @@ internal static class Program {
         var description = new ModelDescription();
         description.AddLayer<LandscapeLayer>();
         description.AddLayer<Perimeter>();
-        description.AddLayer<WaterLayer>();
+        description.AddLayer<VectorWaterLayer>();
+        description.AddLayer<RasterWaterLayer>();
         description.AddLayer<VegetationLayer>();
         description.AddLayer<TemperatureLayer>();
         description.AddLayer<AltitudeLayer>();

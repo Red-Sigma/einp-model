@@ -17,8 +17,12 @@
       "file": "Resources/einp_perimeter.geojson"
     },
     {
-      "name":"WaterLayer",
+      "name":"VectorWaterLayer",
       "file":"Resources/einp_water_spots.geojson"
+    },
+    {
+      "name":"RasterWaterLayer",
+      "file":"Resources/einp_water_spots.asc"
     },
     {
       "name": "VegetationLayer",
