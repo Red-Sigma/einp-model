@@ -74,8 +74,18 @@ public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
     protected int _herdId { get; }
     
     public static Random _random = new ();
-    private const int RandomWalkMaxDistanceInM = 500;
-    private const int RandomWalkMinDistanceInM = 10;
+    
+    /// <summary>
+    /// Should be dependent from tick length
+    /// </summary>
+    [PropertyDescription]
+    public int RandomWalkMaxDistanceInM { get; set;  }
+    /// <summary>
+    /// Should be dependent from tick length
+    /// </summary>
+    [PropertyDescription]
+    public int RandomWalkMinDistanceInM { get; set;  }
+    
     public const double MaxHydration = 100.0;
     public const double MaxSatiety = 100.0; 
     public const int MaxAge = 25;

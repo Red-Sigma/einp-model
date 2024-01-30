@@ -64,6 +64,14 @@
         {
           "parameter": "DailyWaterCalf",
           "value": 17
+        },
+        {
+          "parameter": "RandomWalkMaxDistanceInM",
+          "value":  500
+        },
+        {
+          "parameter": "RandomWalkMinDistanceInM",
+          "value":  10
         }
       ],
       "file":"Resources/bisons.csv",
@@ -97,6 +105,14 @@
         {
           "parameter": "DailyWaterCalf",
           "value": 79
+        },
+        {
+          "parameter": "RandomWalkMaxDistanceInM",
+          "value":  500
+        },
+        {
+          "parameter": "RandomWalkMinDistanceInM",
+          "value":  10
         }
       ],
       "file":"Resources/moose.csv",
@@ -130,6 +146,14 @@
         {
           "parameter": "DailyWaterCalf",
           "value": 9
+        },
+        {
+          "parameter": "RandomWalkMaxDistanceInM",
+          "value":  500
+        },
+        {
+          "parameter": "RandomWalkMinDistanceInM",
+          "value":  10
         }
       ],
       "file":"Resources/elks.csv",
