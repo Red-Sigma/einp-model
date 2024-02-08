@@ -8,9 +8,9 @@ To use the model clone the repository by running:
 git clone https://github.com/Red-Sigma/einp-model.git
 ```
 
-Then go into the newly downloaded project and run the simmulation:
+Then go into the newly downloaded project and run the simulation:
 ```bash
-cd einp-model/GeoRasterBlueprint/
+cd einp-model/EINP/
 dotnet run -sm config.json
 ```
 

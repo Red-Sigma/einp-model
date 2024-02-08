@@ -1,19 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mars.Interfaces.Annotations;
 using Mars.Interfaces.Environments;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model; 
 
-public class Bison : AbstractAnimal {
-
+public class Moose : AbstractAnimal {
+    
     [ActiveConstructor]
-    public Bison() {
+    public Moose() {
     }
     
     [ActiveConstructor]
-    public Bison(
+    public Moose(
         LandscapeLayer landscapeLayer, 
         Perimeter perimeter,
         VegetationLayer vegetationLayer,
@@ -27,17 +27,17 @@ public class Bison : AbstractAnimal {
         double longitude,
         Position position) : 
         base(landscapeLayer, 
-        perimeter,
-        vegetationLayer,
-        waterLayer,
-        rasterWaterLayer,
-        id,
-        animalType,
-        isLeading,
-        herdId,
-        latitude, 
-        longitude,
-        position) { 
+            perimeter,
+            vegetationLayer,
+            waterLayer,
+            rasterWaterLayer,
+            id,
+            animalType,
+            isLeading,
+            herdId,
+            latitude, 
+            longitude,
+            position) { 
     }
     
     #region Properties and Fields
@@ -54,11 +54,9 @@ public class Bison : AbstractAnimal {
     public int ChanceForPregnancy = 10;
 
 
-    
-    protected string BisonType;
-        
+    protected string MooseType;
     #endregion
-    
+
     #region Constants
     private readonly Dictionary<AnimalLifePeriod, double> _starvationRate = new()
     {
@@ -86,7 +84,8 @@ public class Bison : AbstractAnimal {
             { AnimalLifePeriod.Adolescent, MaxHydration * DailyWaterAdolescent / 24 / DailyWaterAdult}, 
             { AnimalLifePeriod.Adult, MaxHydration * DailyWaterAdult / 24 / DailyWaterAdult}
         };
-    
+
+    //total need of food per day in kilogramms
     [PropertyDescription]
     public static double DailyFoodAdult { get; set; }
     [PropertyDescription]
@@ -102,18 +101,17 @@ public class Bison : AbstractAnimal {
     [PropertyDescription]
     public static double DailyWaterAdolescent { get; set; }
     #endregion
-    
-    public override void Tick() { 
+    public override void Tick() {
         
         _hoursLived++;
         if (_hoursLived % 1 == 0 && _pregnant) {
-            if (_pregnancyDuration < 8) {
+            if (_pregnancyDuration < 6) {
                 _pregnancyDuration++;
             }
             else {
                 _pregnancyDuration = 0;
-                _landscapeLayer.SpawnBison(_landscapeLayer, _perimeter, _vegetationLayer, _vectorWaterLayer, _rasterWaterLayer,
-                    AnimalType.BisonCalf, false, _herdId, Latitude, Longitude, Position);
+                _landscapeLayer.SpawnMoose(_landscapeLayer, _perimeter, _vegetationLayer, _vectorWaterLayer, _rasterWaterLayer,
+                    AnimalType.MooseCalf, false, _herdId, Latitude, Longitude, Position);
             }
         }
         if (_hoursLived == 2)
@@ -133,6 +131,8 @@ public class Bison : AbstractAnimal {
         }
         UpdateState();
     }
+    
+    //TODO change to simulate moose water and food consumption
     protected override void UpdateState()
     {
         int currentHour;
@@ -152,7 +152,7 @@ public class Bison : AbstractAnimal {
             Dehydrate(_dehydrationRate[_LifePeriod]);
         }
     }
-    
+
     public override void YearlyRoutine() {
         _hoursLived = 0;
         Age++;
@@ -163,13 +163,13 @@ public class Bison : AbstractAnimal {
             if (newLifePeriod == AnimalLifePeriod.Adult) {
                 //50:50 chance of being male or female
                 if (_random.Next(2) == 0)
-                    _animalType = AnimalType.BisonBull;
+                    _animalType = AnimalType.MooseBull;
                 else
-                    _animalType = AnimalType.BisonCow;
+                    _animalType = AnimalType.MooseCow;
             }
             _LifePeriod = newLifePeriod;
         }
-        
+
         //max age 25
         if (Age > 15)
         {
@@ -183,7 +183,7 @@ public class Bison : AbstractAnimal {
         //check for possible reproduction
         if (!(Age >= _reproductionYears[0] && Age <= _reproductionYears[1])) return;
 
-        if (!_animalType.Equals(AnimalType.BisonCow)) return;
+        if (!_animalType.Equals(AnimalType.MooseCow)) return;
 
         if (_LifePeriod == AnimalLifePeriod.Adult && _random.Next(100) < ChanceForPregnancy-1) {
             _pregnant = true;

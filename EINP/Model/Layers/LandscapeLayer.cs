@@ -11,7 +11,7 @@ using Mars.Interfaces.Layers;
 using NetTopologySuite.Geometries;
 using Position = Mars.Interfaces.Environments.Position;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model;
 
 public class LandscapeLayer : AbstractLayer {
     

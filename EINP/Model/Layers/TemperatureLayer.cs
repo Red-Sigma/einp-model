@@ -3,7 +3,7 @@ using System.IO;
 using System;
 using ServiceStack;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model;
 
 public class TemperatureLayer: AbstractLayer
 {

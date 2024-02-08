@@ -4,7 +4,7 @@ using System.Linq;
 using Mars.Interfaces.Annotations;
 using Mars.Interfaces.Environments;
 
-namespace GeoRasterBlueprint.Model; 
+namespace EINP.Model; 
 
 public class Elk : AbstractAnimal {
     

@@ -7,7 +7,7 @@ using NetTopologySuite.Utilities;
 using Position = Mars.Interfaces.Environments.Position;
 using Mars.Interfaces.Annotations;
 
-namespace GeoRasterBlueprint.Model;
+namespace EINP.Model;
 
 public abstract class AbstractAnimal : IPositionable, IAgent<LandscapeLayer> {
 
